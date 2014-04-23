@@ -125,6 +125,16 @@
 
     <Button
         android:id="@+id/up"
+        android:layout_width="300dp"
+        android:layout_height="250dp"
+        android:layout_below="@+id/table"
+        android:background="@android:color/darker_gray"
+        android:layout_centerHorizontal="true"
+        android:text="up" />
+
+    <!--
+         <Button
+        android:id="@+id/up"
         android:layout_width="@dimen/button_width"
         android:layout_height="wrap_content"
         android:layout_below="@+id/table"
@@ -158,5 +168,15 @@
         android:layout_centerHorizontal="true"
         android:onClick="onClickDirection"
         android:text="right" />
+    -->
+
+    <Button
+        android:id="@+id/undo"
+        android:layout_width="@dimen/button_width"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/right"
+        android:layout_centerHorizontal="true"
+        android:onClick="onClickUndo"
+        android:text="undo" />
 
 </RelativeLayout>

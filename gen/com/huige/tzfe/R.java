@@ -26,10 +26,8 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int action_settings=0x7f080015;
-        public static final int down=0x7f080012;
-        public static final int left=0x7f080013;
-        public static final int right=0x7f080014;
+        public static final int action_settings=0x7f080014;
+        public static final int right=0x7f080013;
         public static final int table=0x7f080000;
         public static final int tile0=0x7f080001;
         public static final int tile1=0x7f080002;
@@ -47,6 +45,7 @@ public final class R {
         public static final int tile7=0x7f080008;
         public static final int tile8=0x7f080009;
         public static final int tile9=0x7f08000a;
+        public static final int undo=0x7f080012;
         public static final int up=0x7f080011;
     }
     public static final class layout {

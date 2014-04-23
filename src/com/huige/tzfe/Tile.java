@@ -8,8 +8,7 @@ public class Tile {
 	int value;
 	Point mergedFrom;
 
-	int previousH;
-	int previousW;
+	int previousValue;
 
 	Tile(int heigth, int width, int value){
 		this.heigth = heigth;
@@ -17,9 +16,8 @@ public class Tile {
 		this.value = value;
 	}
 
-	void savePosition() {
-		previousH = heigth;
-		previousW = width;
+	void saveValue() {
+		previousValue = value;
 	};
 
 	void updatePosition(int heigth, int width) {

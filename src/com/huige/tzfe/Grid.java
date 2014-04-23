@@ -73,6 +73,19 @@ public class Grid {
 		}
 		return availableCells;
 	}
+	
+	int maxValue() {
+		int max = 0;
+		
+		for(int height = 0; height < height_size; height++){
+			for(int width = 0; width < width_size; width++){
+				if( cells[height][width].value > max ){
+					max = cells[height][width].value;
+				}
+			}
+		}
+		return max;
+	}
 
 	boolean withinBounds(int height, int width) {
 		return height >= 0 && height < height_size &&
@@ -88,16 +101,8 @@ public class Grid {
 		return height >= 0 && height < height_size;
 	}
 	
+	//
 	boolean withinWidth(int width) {
 		return width >= 0 && width < width_size;
-	}
-
-	void serialize(){
-		int cellState[];
-		for(int height = 0; height < height_size; height++){
-			for(int width = 0; width < width_size; width++){
-
-			}
-		}
 	}
 }

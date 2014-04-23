@@ -11,7 +11,10 @@ public class GameManager {
 	boolean won;
 	boolean keepPlaying;
 	String TAG = "tzfe";
-	
+
+	boolean undo = false;
+	Tile random = null;
+
 	GameManager() {
 		//this.size = size; // Size of the grid
 		startTiles  = 2;
@@ -51,7 +54,7 @@ public class GameManager {
 
 		return new Point(map[direction][0], map[direction][1]);
 	}
-	
+
 	// Get the vector representing the chosen direction
 	int[] getParameter(int direction) {
 		// Vectors representing tile movement
@@ -61,7 +64,19 @@ public class GameManager {
 				{ grid.height_size-2 ,	-1, 0, 					1	},  // Down
 				{ 0, 					1,	1,					1	},  // Left
 		};
-		
+
+		return map[direction];
+	}
+
+	int[] getUndoParameter(int direction) {
+		// Vectors representing tile movement
+		int[][] map = {
+				{ grid.height_size-1 ,  -1,	0, 					1	}, // Up
+				{ 0,					1,	0,					1	}, // Right
+				{ 0,					1,  0, 					1	},  // Down
+				{ 0, 					1,	grid.width_size-1,	-1	},  // Left
+		};
+
 		return map[direction];
 	}
 
@@ -72,7 +87,7 @@ public class GameManager {
 			for(int width = 0; width < grid.width_size; width++){
 				tile = grid.cells[height][width];
 				tile.mergedFrom = null;
-				tile.savePosition();
+				tile.saveValue();
 			}
 		}
 	}
@@ -87,7 +102,7 @@ public class GameManager {
 
 		// Add the initial tiles
 		Log.i(TAG, "setup");
-		
+
 		addStartTiles();
 		// Update the actuator
 		//actuate();
@@ -97,13 +112,13 @@ public class GameManager {
 	// Adds a tile in a random position
 	void addRandomTile() {
 		Log.i(TAG, "addRandomTile");
-		
-		Tile tile = grid.randomAvailableCell();
 
-		if ( null != tile ) {
-			int value = Math.random() < 0.9 ? 2 : 4;
-			tile.value = value;
-			Log.e(TAG, "addRandomTile tile.value:"+tile.value);
+		random = grid.randomAvailableCell();
+
+		if ( null != random ) {
+			//int value = Math.random() < 0.9 ? 2 : 4;
+			random.value = 2;
+			Log.e(TAG, "addRandomTile tile.value:"+random.value);
 		}
 	}
 
@@ -113,7 +128,7 @@ public class GameManager {
 		for (int i = 0; i < startTiles; i++) {
 			addRandomTile();
 		}
-	};
+	}; 
 
 	// Move a tile and its representation
 	void moveTile(Tile tile, Tile cell) {
@@ -122,18 +137,26 @@ public class GameManager {
 		//cell.mergedFrom = tile;
 		//tile = cell;
 	}
-	
+
+	// Undo Move a tile and its representation
+	void undoMoveTile(Tile tile, Tile cell) {
+		tile.value = tile.previousValue;
+		cell.value -= tile.value;
+		//cell.mergedFrom = tile;
+		//tile = cell;
+	}
+
 	// Move tiles on the grid in the specified direction
 	void Move(int direction){
 		// 0: up, 1: right, 2: down, 3: left
 		Tile tile, other;
 		int tempH, tempW;
-		
+
 		if (this.isGameTerminated()) return;
-		
+
 		// Save the current tile positions and remove merger information
 		prepareTiles();
-		
+
 		Point point = getVector(direction);
 		int []param = getParameter(direction);
 		boolean moved = false;
@@ -141,17 +164,17 @@ public class GameManager {
 		for(int height = param[0]; grid.withinHeight(height); height+=param[1]){
 			for(int width = param[2]; grid.withinHeight(width); width+= param[3]){
 				tile = grid.cells[height][width];
-				
+
 				if( 0 == tile.value ){
 					continue;
 				}
-				
+
 				tempH = height + point.heigth;
 				tempW = width + point.width;
- 				
+
 				while(grid.withinBounds(tempH,tempW)){
 					other = grid.cells[tempH][tempW];
-					
+
 					if( 0 == other.value ){
 						moveTile(tile, other);
 						moved = true;
@@ -180,8 +203,58 @@ public class GameManager {
 			if (!movesAvailable()) {
 				this.over = true; // Game over!
 			}
+			else{
+				undo = true;
+			}
 		}
 	}
+
+	// Move tiles on the grid in the specified direction
+	void undoMove(int direction){
+		// 0: up, 1: right, 2: down, 3: left
+		Tile tile, other;
+		int tempH, tempW;
+
+		if (!undo) return; //不能undo
+
+		random.value = 0; //新加的取消掉
+
+		Point point = getVector(direction);
+		int []param = getUndoParameter(direction);
+
+		for(int height = param[0]; grid.withinHeight(height); height+=param[1]){
+			for(int width = param[2]; grid.withinHeight(width); width+= param[3]){
+				tile = grid.cells[height][width];
+
+				if(tile.value == tile.previousValue ){
+					continue;
+				}
+
+				tempH = height + point.heigth;
+				tempW = width + point.width;
+
+				while(grid.withinBounds(tempH,tempW)){
+					other = grid.cells[tempH][tempW];
+
+					if( 0 == other.value ){
+						tempH += point.heigth;
+						tempW += point.width;
+						continue;
+					}
+					else{
+						undoMoveTile(tile, other);
+						score -= ( other.value - tile.previousValue );
+						break;
+					}
+				}
+			}
+		}
+
+		if( grid.maxValue() < 2048 ){
+			won = false;
+		}
+	}
+
 
 	boolean movesAvailable() {
 		return grid.cellsAvailable() > 0 || this.tileMatchesAvailable();
@@ -201,7 +274,7 @@ public class GameManager {
 						return true;
 					}
 				}
-				
+
 				if( width > 1 ){
 					leftTile = grid.cells[height][width-1];
 					if( tile.value == leftTile.value ){
@@ -216,11 +289,11 @@ public class GameManager {
 	boolean positionsEqual(Tile first, Tile second){
 		return first.heigth == second.heigth && first.width == second.width;
 	}
-	
+
 	boolean positionsEqual(Point first, Point second){
 		return first.heigth == second.heigth && first.width == second.width;
 	}
-	
+
 	class Point{
 		Point(int heigth, int width){
 			this.heigth = heigth;
