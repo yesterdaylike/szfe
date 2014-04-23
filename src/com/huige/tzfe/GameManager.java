@@ -7,6 +7,7 @@ public class GameManager {
 	//int size;
 	int startTiles;
 	int score;
+	int step;
 	boolean over;
 	boolean won;
 	boolean keepPlaying;
@@ -14,8 +15,10 @@ public class GameManager {
 
 	boolean undo = false;
 	Tile random = null;
-
-	GameManager() {
+	private PrintInterface mPrintInterface; 
+	
+	GameManager(PrintInterface mPI) {
+		mPrintInterface = mPI;
 		//this.size = size; // Size of the grid
 		startTiles  = 2;
 		Log.i(TAG, "GameManager startTiles:"+startTiles);
@@ -96,13 +99,15 @@ public class GameManager {
 	void setup() {
 		this.grid        = new Grid();
 		this.score       = 0;
+		this.step        = 0;
 		this.over        = false;
 		this.won         = false;
 		this.keepPlaying = false;
 
 		// Add the initial tiles
 		Log.i(TAG, "setup");
-
+		mPrintInterface.printScore(score);
+		mPrintInterface.printSteps(step);
 		addStartTiles();
 		// Update the actuator
 		//actuate();
@@ -187,6 +192,7 @@ public class GameManager {
 						moved = true;
 						other.mergedFrom = new Point(tile.heigth, tile.width);
 						score += other.value;
+						mPrintInterface.printScore(score);
 						if (other.value == 2048) won = true;
 						break;
 					}
@@ -199,7 +205,7 @@ public class GameManager {
 
 		if (moved) {
 			addRandomTile();
-
+			mPrintInterface.printSteps(++step);
 			if (!movesAvailable()) {
 				this.over = true; // Game over!
 			}
@@ -244,6 +250,7 @@ public class GameManager {
 					else{
 						undoMoveTile(tile, other);
 						score -= ( other.value - tile.previousValue );
+						mPrintInterface.printScore(score);
 						break;
 					}
 				}
@@ -253,6 +260,8 @@ public class GameManager {
 		if( grid.maxValue() < 2048 ){
 			won = false;
 		}
+		
+		mPrintInterface.printSteps(++step);
 	}
 
 

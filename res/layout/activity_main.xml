@@ -8,11 +8,21 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity" >
 
+    <Button
+        android:id="@+id/undo"
+        android:layout_width="@dimen/button_width"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:onClick="onClickUndo"
+        android:text="undo" />
+
     <TableLayout
         android:id="@+id/table"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true" >
+        android:layout_below="@id/undo"
+        android:layout_centerHorizontal="true"
+        android:background="@android:color/darker_gray" >
 
         <TableRow>
 
@@ -20,25 +30,29 @@
                 android:id="@+id/tile0"
                 android:layout_width="@dimen/size"
                 android:layout_height="@dimen/size"
-                android:padding="3dip" />
+                android:padding="3dip"
+                android:textSize="@dimen/textsize" />
 
             <TextView
                 android:id="@+id/tile1"
                 android:layout_width="@dimen/size"
                 android:layout_height="@dimen/size"
-                android:padding="3dip" />
+                android:padding="3dip"
+                android:textSize="@dimen/textsize" />
 
             <TextView
                 android:id="@+id/tile2"
                 android:layout_width="@dimen/size"
                 android:layout_height="@dimen/size"
-                android:padding="3dip" />
+                android:padding="3dip"
+                android:textSize="@dimen/textsize" />
 
             <TextView
                 android:id="@+id/tile3"
                 android:layout_width="@dimen/size"
                 android:layout_height="@dimen/size"
-                android:padding="3dip" />
+                android:padding="3dip"
+                android:textSize="@dimen/textsize" />
         </TableRow>
 
         <TableRow>
@@ -47,25 +61,29 @@
                 android:id="@+id/tile4"
                 android:layout_width="@dimen/size"
                 android:layout_height="@dimen/size"
-                android:padding="3dip" />
+                android:padding="3dip"
+                android:textSize="@dimen/textsize" />
 
             <TextView
                 android:id="@+id/tile5"
                 android:layout_width="@dimen/size"
                 android:layout_height="@dimen/size"
-                android:padding="3dip" />
+                android:padding="3dip"
+                android:textSize="@dimen/textsize" />
 
             <TextView
                 android:id="@+id/tile6"
                 android:layout_width="@dimen/size"
                 android:layout_height="@dimen/size"
-                android:padding="3dip" />
+                android:padding="3dip"
+                android:textSize="@dimen/textsize" />
 
             <TextView
                 android:id="@+id/tile7"
                 android:layout_width="@dimen/size"
                 android:layout_height="@dimen/size"
-                android:padding="3dip" />
+                android:padding="3dip"
+                android:textSize="@dimen/textsize" />
         </TableRow>
 
         <TableRow>
@@ -74,25 +92,29 @@
                 android:id="@+id/tile8"
                 android:layout_width="@dimen/size"
                 android:layout_height="@dimen/size"
-                android:padding="3dip" />
+                android:padding="3dip"
+                android:textSize="@dimen/textsize" />
 
             <TextView
                 android:id="@+id/tile9"
                 android:layout_width="@dimen/size"
                 android:layout_height="@dimen/size"
-                android:padding="3dip" />
+                android:padding="3dip"
+                android:textSize="@dimen/textsize" />
 
             <TextView
                 android:id="@+id/tile10"
                 android:layout_width="@dimen/size"
                 android:layout_height="@dimen/size"
-                android:padding="3dip" />
+                android:padding="3dip"
+                android:textSize="@dimen/textsize" />
 
             <TextView
                 android:id="@+id/tile11"
                 android:layout_width="@dimen/size"
                 android:layout_height="@dimen/size"
-                android:padding="3dip" />
+                android:padding="3dip"
+                android:textSize="@dimen/textsize" />
         </TableRow>
 
         <TableRow>
@@ -101,82 +123,52 @@
                 android:id="@+id/tile12"
                 android:layout_width="@dimen/size"
                 android:layout_height="@dimen/size"
-                android:padding="3dip" />
+                android:padding="3dip"
+                android:textSize="@dimen/textsize" />
 
             <TextView
                 android:id="@+id/tile13"
                 android:layout_width="@dimen/size"
                 android:layout_height="@dimen/size"
-                android:padding="3dip" />
+                android:padding="3dip"
+                android:textSize="@dimen/textsize" />
 
             <TextView
                 android:id="@+id/tile14"
                 android:layout_width="@dimen/size"
                 android:layout_height="@dimen/size"
-                android:padding="3dip" />
+                android:padding="3dip"
+                android:textSize="@dimen/textsize" />
 
             <TextView
                 android:id="@+id/tile15"
                 android:layout_width="@dimen/size"
                 android:layout_height="@dimen/size"
-                android:padding="3dip" />
+                android:padding="3dip"
+                android:textSize="@dimen/textsize" />
         </TableRow>
     </TableLayout>
 
-    <Button
-        android:id="@+id/up"
-        android:layout_width="300dp"
-        android:layout_height="250dp"
-        android:layout_below="@+id/table"
-        android:background="@android:color/darker_gray"
-        android:layout_centerHorizontal="true"
-        android:text="up" />
+    <TextView
+        android:id="@+id/step"
+        android:layout_width="@dimen/size"
+        android:layout_height="@dimen/size"
+        android:layout_below="@id/table"
+        android:padding="3dip" />
 
-    <!--
-         <Button
-        android:id="@+id/up"
-        android:layout_width="@dimen/button_width"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/table"
-        android:layout_centerHorizontal="true"
-        android:onClick="onClickDirection"
-        android:text="up" />
+    <TextView
+        android:id="@+id/score"
+        android:layout_width="@dimen/size"
+        android:layout_height="@dimen/size"
+        android:layout_below="@id/table"
+        android:layout_toRightOf="@+id/step"
+        android:padding="3dip" />
 
-    <Button
-        android:id="@+id/down"
-        android:layout_width="@dimen/button_width"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/up"
-        android:layout_centerHorizontal="true"
-        android:onClick="onClickDirection"
-        android:text="down" />
-
-    <Button
-        android:id="@+id/left"
-        android:layout_width="@dimen/button_width"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/down"
-        android:layout_centerHorizontal="true"
-        android:onClick="onClickDirection"
-        android:text="left" />
-
-    <Button
-        android:id="@+id/right"
-        android:layout_width="@dimen/button_width"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/left"
-        android:layout_centerHorizontal="true"
-        android:onClick="onClickDirection"
-        android:text="right" />
-    -->
-
-    <Button
-        android:id="@+id/undo"
-        android:layout_width="@dimen/button_width"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/right"
-        android:layout_centerHorizontal="true"
-        android:onClick="onClickUndo"
-        android:text="undo" />
+    <TextView
+        android:id="@+id/message"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/score"
+        android:padding="3dip" />
 
 </RelativeLayout>

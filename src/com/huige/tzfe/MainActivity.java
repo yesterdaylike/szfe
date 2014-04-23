@@ -8,10 +8,9 @@ import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements PrintInterface{
 
 	int viewIds[] = {
 			R.id.tile0,
@@ -43,6 +42,9 @@ public class MainActivity extends Activity {
 	private static final int SWIPE_THRESHOLD_VELOCITY = 200;
 	private GestureDetector gestureDetector;
 	View.OnTouchListener gestureListener;
+	TextView messageTextView;
+	TextView stepTextView;
+	TextView scoreTextView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -52,10 +54,15 @@ public class MainActivity extends Activity {
 		for (int i = 0; i < viewIds.length; i++) {
 			tileView[i] = (TextView)findViewById(viewIds[i]);
 		}
-		game = new GameManager();
+		
+		stepTextView = (TextView)findViewById(R.id.step);
+		scoreTextView = (TextView)findViewById(R.id.score);
+		
+		game = new GameManager(MainActivity.this);
 		print();
 
-		Button upButton = (Button)findViewById(R.id.up);
+		messageTextView = (TextView)findViewById(R.id.message);
+		View tableLayout = findViewById(R.id.table);
 
 		// Gesture detection
 		gestureDetector = new GestureDetector(this, new MyGestureDetector());
@@ -65,36 +72,60 @@ public class MainActivity extends Activity {
 			}
 		};
 
-		upButton.setOnTouchListener(gestureListener);
+		tableLayout.setOnTouchListener(gestureListener);
 	}
 
 	class MyGestureDetector extends SimpleOnGestureListener {
 		@Override
 		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-			Log.e(TAG, "onFling v  x:"+velocityX+",y:"+velocityY);
-			Log.i(TAG, "e1 x:"+e1.getX()+",y:"+e1.getY());
-			Log.i(TAG, "e2 x:"+e2.getX()+",y:"+e2.getY());
+			messageTextView.setText("onFling v  x:"+velocityX+",y:"+velocityY);
+			messageTextView.append("\n");
+			messageTextView.append("e1 x:"+e1.getX()+",y:"+e1.getY());
+			messageTextView.append("\n");
+			messageTextView.append("e2 x:"+e2.getX()+",y:"+e2.getY());
+			messageTextView.append("\n");
 
-			if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
-				return false;
-			// right to left swipe
-			
 			float xInterval = e1.getX() - e2.getX();
 			float yInterval = e1.getY() - e2.getY();
-			
+
 			float xIntervalAbs = Math.abs(xInterval);
 			float yIntervalAbs = Math.abs(yInterval);
-			
+
+			String str = "null";
+
 			if( xIntervalAbs > SWIPE_MIN_DISTANCE && xIntervalAbs > yIntervalAbs*2){
-				
+				if( xInterval > 0 ){
+					Log.i(TAG, "left");
+					str = "left";
+					direction = 3;
+				}
+				else{
+					Log.i(TAG, "right");
+					str = "right";
+					direction = 1;
+				}
 			}
-			
-			if(e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
 
+			if( yIntervalAbs > SWIPE_MIN_DISTANCE && yIntervalAbs > xIntervalAbs*2){
+				if( yInterval > 0 ){
+					Log.i(TAG, "up");
+					str = "up";
+					direction = 0;
+				}
+				else{
+					Log.i(TAG, "down");
+					str = "down";
+					direction = 2;
+				}
 			}
-			else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
 
+			if( direction >= 0){
+				game.Move(direction);
+				print();
 			}
+
+			messageTextView.append(str);
+			messageTextView.append("\n");
 			return false;
 		}
 
@@ -110,35 +141,15 @@ public class MainActivity extends Activity {
 		Tile tile;
 		for(int i = 0; i < tileView.length; i++ ){
 			tile = tileValus[i/4][i%4];
-			tileView[i].setText(String.valueOf(tile.value));
+			
+			if( 0 == tile.value ){
+				tileView[i].setText("");
+			}
+			else{
+				tileView[i].setText(String.valueOf(tile.value));
+			}
 		}
-	}
-
-	public void onClickDirection(View view){
-		switch (view.getId()) {
-		/*		case R.id.up:
-			direction = 0;
-			break;
-		case R.id.down:
-			direction = 2;
-			break;
-		case R.id.left:
-			direction = 3;
-			break;*/
-		case R.id.right:
-			direction = 1;
-			break;
-
-		default:
-			direction = -1;
-			break;
-		}
-
-		if( direction >= 0){
-			game.Move(direction);
-			print();
-		}
-	}
+	} 
 
 	public void onClickUndo(View view){
 		if( game.undo ){
@@ -152,5 +163,18 @@ public class MainActivity extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
+	}
+
+	@Override
+	public void printSteps(int step) {
+		// TODO Auto-generated method stub
+		stepTextView.setText(String.valueOf(step));
+	}
+
+	@Override
+	public void printScore(int score) {
+		// TODO Auto-generated method stub
+		scoreTextView.setText(String.valueOf(score));
+		
 	}
 }
