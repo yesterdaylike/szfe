@@ -136,9 +136,10 @@ public class GameManager {
 	}; 
 
 	// Move a tile and its representation
-	void moveTile(Tile tile, Tile cell) {
-		cell.value += tile.value;
-		tile.value = 0;
+	void moveTile(Tile from, Tile to) {
+		mPrintInterface.moveView(from, to);
+		to.value += from.value;
+		from.value = 0;
 		//cell.mergedFrom = tile;
 		//tile = cell;
 	}

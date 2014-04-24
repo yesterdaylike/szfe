@@ -8,6 +8,9 @@ import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.TranslateAnimation;
 import android.widget.TextView;
 
 public class MainActivity extends Activity implements PrintInterface{
@@ -138,18 +141,20 @@ public class MainActivity extends Activity implements PrintInterface{
 		Tile tile;
 		for(int i = 0; i < tileView.length; i++ ){
 			tile = tileValus[i/4][i%4];
-
-			if( 0 == tile.value ){
-				tileView[i].setText("");
-			}
-			else{
-				tileView[i].setText(String.valueOf(tile.value));
-			}
-
-			tileView[i].setBackgroundColor(Util.getColor(tile.value));
-			//tileView[i].setBackgroundColor(android.graphics.Color.RED);
+			printView(tileView[i], tile);
 		}
 	} 
+
+	private void printView(TextView view, Tile tile){
+		if( 0 == tile.value ){
+			view.setText("");
+		}
+		else{
+			view.setText(String.valueOf(tile.value));
+		}
+
+		view.setBackgroundColor(Util.getColor(tile.value));
+	}
 
 	public void onClickUndo(View view){
 		if( game.undo ){
@@ -175,6 +180,49 @@ public class MainActivity extends Activity implements PrintInterface{
 	public void printScore(int score) {
 		// TODO Auto-generated method stub
 		scoreTextView.setText(String.valueOf(score));
-
 	}
+
+	@Override
+	public void moveView(final Tile from, final Tile to) {
+		messageTextView.append("from["+from.heigth+","+from.width+"]:"+from.value+" > to["+to.heigth+","+to.width+"]:"+to.value+"\n");
+		
+		// TODO Auto-generated method stub
+		/*final TextView fromView = (TextView) getViewByTile(from);
+		final TextView toView = (TextView) getViewByTile(to);
+
+		int toXDelta = toView.getLeft() - fromView.getLeft();
+		int toYDelta = toView.getTop() - fromView.getTop();
+
+		fromView.getWidth();
+		TranslateAnimation ta = new TranslateAnimation(0, toXDelta, 0, toYDelta);
+		ta.setDuration(1000);
+		ta.setAnimationListener(new AnimationListener() {
+
+			@Override
+			public void onAnimationStart(Animation animation) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onAnimationRepeat(Animation animation) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				// TODO Auto-generated method stub
+				printView(fromView, from);
+				printView(toView, to);
+			}
+		});
+		fromView.startAnimation(ta);*/
+	}
+
+	private View getViewByTile(Tile tile){
+		View view = tileView[ ( tile.heigth << 2 ) + tile.width ];
+		return view;
+	}
+
 }
