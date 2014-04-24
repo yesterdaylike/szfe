@@ -38,6 +38,7 @@ public class MainActivity extends Activity implements PrintInterface{
 
 		messageTextView = (TextView)findViewById(R.id.message);
 		tableLayout = (TableView) findViewById(R.id.table);
+		tableLayout.setDraw(game.grid.cells);
 
 		// Gesture detection
 		gestureDetector = new GestureDetector(this, new MyGestureDetector());
@@ -94,14 +95,14 @@ public class MainActivity extends Activity implements PrintInterface{
 					direction = 2;
 				}
 			}
-
+			
+			messageTextView.append(str);
+			messageTextView.append("\n");
+			
 			if( direction >= 0){
 				game.Move(direction);
 				print();
 			}
-
-			messageTextView.append(str);
-			messageTextView.append("\n");
 			return false;
 		}
 
@@ -113,27 +114,8 @@ public class MainActivity extends Activity implements PrintInterface{
 	}
 
 	private void print(){
-		Tile[][] tiles = game.grid.cells;
-		tableLayout.setDraw(tiles);
 		tableLayout.invalidate();
-		//tableLayout.draw(tileValus);
-		/*Tile tile;
-		for(int i = 0; i < tileView.length; i++ ){
-			tile = tileValus[i/4][i%4];
-			printView(tileView[i], tile);
-		}*/
 	}
-
-	/*private void printView(TextView view, Tile tile){
-		if( 0 == tile.value ){
-			view.setText("");
-		}
-		else{
-			view.setText(String.valueOf(tile.value));
-		}
-
-		view.setBackgroundColor(Util.getColor(tile.value));
-	}*/
 
 	public void onClickUndo(View view){
 		if( game.undo ){
@@ -165,10 +147,36 @@ public class MainActivity extends Activity implements PrintInterface{
 	public void moveView(final Tile from, final Tile to) {
 		messageTextView.append("from["+from.heigth+","+from.width+"]:"+from.value+" > to["+to.heigth+","+to.width+"]:"+to.value+"\n");
 	}
-
 	/*private View getViewByTile(Tile tile){
 		View view = tileView[ ( tile.heigth << 2 ) + tile.width ];
 		return view;
 	}*/
 
+	@Override
+	public void moveViewsSetp(Object[] from, Object[] to) {
+		// TODO Auto-generated method stub
+
+		StringBuffer sb = new StringBuffer("\n");
+		Tile[][] cells = game.grid.cells;
+		
+		for (int h = 0; h < 4; h++) {
+			for (int w = 0; w < 4; w++) {
+				sb.append(String.format(" %2d ", cells[h][w].previousValue));
+			}
+			sb.append("  >>>>  ");
+			for (int w = 0; w < 4; w++) {
+				sb.append(String.format(" %2d ", cells[h][w].value));
+			}
+			sb.append("\n");
+		}
+		messageTextView.append(sb.toString());
+		
+		tableLayout.moveViewsStepAnimation(from, to);
+	}
+
+	@Override
+	public void addRandomTile(Tile newTile) {
+		// TODO Auto-generated method stub
+
+	}
 }

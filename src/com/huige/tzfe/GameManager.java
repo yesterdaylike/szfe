@@ -1,5 +1,9 @@
 package com.huige.tzfe;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import android.util.Log;
 
 public class GameManager {
@@ -123,6 +127,7 @@ public class GameManager {
 		if ( null != random ) {
 			//int value = Math.random() < 0.9 ? 2 : 4;
 			random.value = 2;
+			mPrintInterface.addRandomTile(random);
 			Log.e(TAG, "addRandomTile tile.value:"+random.value);
 		}
 	}
@@ -168,6 +173,9 @@ public class GameManager {
 		boolean moved = false;
 		
 		Log.e(TAG, "Move direction:"+direction);
+		
+		ArrayList<Tile> formTiles = new ArrayList<Tile>();
+		ArrayList<Tile> toTiles = new ArrayList<Tile>();
 
 		for(int height = param[0]; grid.withinHeight(height); height+=param[1]){
 			for(int width = param[2]; grid.withinHeight(width); width+= param[3]){
@@ -187,6 +195,10 @@ public class GameManager {
 					if( 0 == other.value ){
 						Log.i(TAG, "0 == other.value");
 						moveTile(tile, other);
+						
+						formTiles.add(tile);
+						toTiles.add(other);
+						
 						moved = true;
 						tile = other;
 						tempH += point.heigth;
@@ -195,6 +207,10 @@ public class GameManager {
 					else if( tile.value == other.value && null == other.mergedFrom ){
 						Log.i(TAG, "tile.value == other.value && null == other.mergedFrom");
 						moveTile(tile, other);
+						
+						formTiles.add(tile);
+						toTiles.add(other);
+						
 						moved = true;
 						other.mergedFrom = new Point(tile.heigth, tile.width);
 						score += other.value;
@@ -212,6 +228,7 @@ public class GameManager {
 
 		if (moved) {
 			Log.i(TAG, "moved");
+			mPrintInterface.moveViewsSetp(formTiles.toArray(), toTiles.toArray());
 			addRandomTile();
 			mPrintInterface.printSteps(++step);
 			if (!movesAvailable()) {

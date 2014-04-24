@@ -8,22 +8,20 @@ public class Util {
 	static final int SWIPE_THRESHOLD_VELOCITY = 200;
 
 	private static int []colors = {
-		0xfffff6df,
-		0xffffecc0,
-		0xffffe3a0,
-		0xffffd980,
-		0xffffd060,
-		0xffffc641,
-		0xffffbd21,
-		0xffffb61c,
-		0xffffae18,
-		0xffffa713,
-		0xffffa00e,
-		0xffff9909,
-		0xffff9105,
-		0xffff8a00,
+		0xffaaaaaa,
+		0xffffcccc,	//2
+		0xffffcc99,	//4
+		0xff99cccc,	//8
+		0xff99cc99,	//16
+		0xff66cccc,	//32
+		0xffccccff,	//64
+		0xffccff99,	//128
+		0xffccffff,	//256
+		0xffff9966,	//512
+		0xffff6666,	//1024
+		0xffcc3399,	//2048
+		0xff9933cc,	//4096
 	};
-
 
 	public static int getColor(int number){
 		int color = colors[0];
