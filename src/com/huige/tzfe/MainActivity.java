@@ -37,9 +37,6 @@ public class MainActivity extends Activity implements PrintInterface{
 	private GameManager game;
 
 	private String TAG = "tzfe";
-	private static final int SWIPE_MIN_DISTANCE = 120;
-	private static final int SWIPE_MAX_OFF_PATH = 250;
-	private static final int SWIPE_THRESHOLD_VELOCITY = 200;
 	private GestureDetector gestureDetector;
 	View.OnTouchListener gestureListener;
 	TextView messageTextView;
@@ -54,10 +51,10 @@ public class MainActivity extends Activity implements PrintInterface{
 		for (int i = 0; i < viewIds.length; i++) {
 			tileView[i] = (TextView)findViewById(viewIds[i]);
 		}
-		
+
 		stepTextView = (TextView)findViewById(R.id.step);
 		scoreTextView = (TextView)findViewById(R.id.score);
-		
+
 		game = new GameManager(MainActivity.this);
 		print();
 
@@ -92,8 +89,8 @@ public class MainActivity extends Activity implements PrintInterface{
 			float yIntervalAbs = Math.abs(yInterval);
 
 			String str = "null";
-
-			if( xIntervalAbs > SWIPE_MIN_DISTANCE && xIntervalAbs > yIntervalAbs*2){
+			direction = -1;
+			if( xIntervalAbs > Util.SWIPE_MIN_DISTANCE && xIntervalAbs > yIntervalAbs*2){
 				if( xInterval > 0 ){
 					Log.i(TAG, "left");
 					str = "left";
@@ -106,7 +103,7 @@ public class MainActivity extends Activity implements PrintInterface{
 				}
 			}
 
-			if( yIntervalAbs > SWIPE_MIN_DISTANCE && yIntervalAbs > xIntervalAbs*2){
+			if( yIntervalAbs > Util.SWIPE_MIN_DISTANCE && yIntervalAbs > xIntervalAbs*2){
 				if( yInterval > 0 ){
 					Log.i(TAG, "up");
 					str = "up";
@@ -141,13 +138,16 @@ public class MainActivity extends Activity implements PrintInterface{
 		Tile tile;
 		for(int i = 0; i < tileView.length; i++ ){
 			tile = tileValus[i/4][i%4];
-			
+
 			if( 0 == tile.value ){
 				tileView[i].setText("");
 			}
 			else{
 				tileView[i].setText(String.valueOf(tile.value));
 			}
+
+			tileView[i].setBackgroundColor(Util.getColor(tile.value));
+			//tileView[i].setBackgroundColor(android.graphics.Color.RED);
 		}
 	} 
 
@@ -175,6 +175,6 @@ public class MainActivity extends Activity implements PrintInterface{
 	public void printScore(int score) {
 		// TODO Auto-generated method stub
 		scoreTextView.setText(String.valueOf(score));
-		
+
 	}
 }

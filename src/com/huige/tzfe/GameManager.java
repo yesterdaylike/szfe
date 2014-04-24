@@ -165,11 +165,13 @@ public class GameManager {
 		Point point = getVector(direction);
 		int []param = getParameter(direction);
 		boolean moved = false;
+		
+		Log.e(TAG, "Move direction:"+direction);
 
 		for(int height = param[0]; grid.withinHeight(height); height+=param[1]){
 			for(int width = param[2]; grid.withinHeight(width); width+= param[3]){
 				tile = grid.cells[height][width];
-
+				Log.v(TAG, "height:"+height+",width:"+width);
 				if( 0 == tile.value ){
 					continue;
 				}
@@ -179,8 +181,10 @@ public class GameManager {
 
 				while(grid.withinBounds(tempH,tempW)){
 					other = grid.cells[tempH][tempW];
-
+					Log.i(TAG, "tempH:"+tempH+",tempW:"+tempW);
+					
 					if( 0 == other.value ){
+						Log.i(TAG, "0 == other.value");
 						moveTile(tile, other);
 						moved = true;
 						tile = other;
@@ -188,6 +192,7 @@ public class GameManager {
 						tempW += point.width;
 					}
 					else if( tile.value == other.value && null == other.mergedFrom ){
+						Log.i(TAG, "tile.value == other.value && null == other.mergedFrom");
 						moveTile(tile, other);
 						moved = true;
 						other.mergedFrom = new Point(tile.heigth, tile.width);
@@ -197,6 +202,7 @@ public class GameManager {
 						break;
 					}
 					else{
+						Log.i(TAG, "other");
 						break;
 					}
 				}
@@ -204,12 +210,15 @@ public class GameManager {
 		}
 
 		if (moved) {
+			Log.i(TAG, "moved");
 			addRandomTile();
 			mPrintInterface.printSteps(++step);
 			if (!movesAvailable()) {
+				Log.i(TAG, "over");
 				this.over = true; // Game over!
 			}
 			else{
+				Log.i(TAG, "undo");
 				undo = true;
 			}
 		}
@@ -262,6 +271,7 @@ public class GameManager {
 		}
 		
 		mPrintInterface.printSteps(++step);
+		undo = false;
 	}
 
 
@@ -277,14 +287,14 @@ public class GameManager {
 			for(int width = 0; width < grid.width_size; width++){
 				tile = grid.cells[height][width];
 
-				if( height > 1 ){
+				if( height >= 1 ){
 					topTile = grid.cells[height-1][width];
 					if( tile.value == topTile.value ){
 						return true;
 					}
 				}
 
-				if( width > 1 ){
+				if( width >= 1 ){
 					leftTile = grid.cells[height][width-1];
 					if( tile.value == leftTile.value ){
 						return true;

@@ -12,7 +12,7 @@ public class Grid {
 	int width_size = 4;
 	Tile [][] cells;
 	String TAG = "tzfe Grid";
-	
+
 	Grid(int height_size, int width_size) {
 		this.height_size = height_size;
 		this.width_size = width_size;
@@ -58,7 +58,9 @@ public class Grid {
 	}
 
 	int cellsAvailable() {
-		return availableCells().size();
+		int size = availableCells().size();
+		Log.i(TAG, "cellsAvailable:"+size);
+		return size;
 	}
 
 	ArrayList<Tile> availableCells() {
@@ -73,10 +75,10 @@ public class Grid {
 		}
 		return availableCells;
 	}
-	
+
 	int maxValue() {
 		int max = 0;
-		
+
 		for(int height = 0; height < height_size; height++){
 			for(int width = 0; width < width_size; width++){
 				if( cells[height][width].value > max ){
@@ -96,11 +98,11 @@ public class Grid {
 		return position.heigth >= 0 && position.heigth < height_size &&
 				position.width >= 0 && position.width < width_size;
 	}
-	
+
 	boolean withinHeight(int height) {
 		return height >= 0 && height < height_size;
 	}
-	
+
 	//
 	boolean withinWidth(int width) {
 		return width >= 0 && width < width_size;
