@@ -30,27 +30,11 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int action_settings=0x7f090015;
-        public static final int message=0x7f090014;
-        public static final int score=0x7f090013;
-        public static final int step=0x7f090012;
+        public static final int action_settings=0x7f090005;
+        public static final int message=0x7f090004;
+        public static final int score=0x7f090003;
+        public static final int step=0x7f090002;
         public static final int table=0x7f090001;
-        public static final int tile0=0x7f090002;
-        public static final int tile1=0x7f090003;
-        public static final int tile10=0x7f09000c;
-        public static final int tile11=0x7f09000d;
-        public static final int tile12=0x7f09000e;
-        public static final int tile13=0x7f09000f;
-        public static final int tile14=0x7f090010;
-        public static final int tile15=0x7f090011;
-        public static final int tile2=0x7f090004;
-        public static final int tile3=0x7f090005;
-        public static final int tile4=0x7f090006;
-        public static final int tile5=0x7f090007;
-        public static final int tile6=0x7f090008;
-        public static final int tile7=0x7f090009;
-        public static final int tile8=0x7f09000a;
-        public static final int tile9=0x7f09000b;
         public static final int undo=0x7f090000;
     }
     public static final class layout {

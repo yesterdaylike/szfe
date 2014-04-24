@@ -27,8 +27,8 @@ public class Util {
 
 	public static int getColor(int number){
 		int color = colors[0];
-		for (int i = 1; i < colors.length; i++) {
-			if( number>>i == 1 ){
+		for (int i = 0; i < colors.length; i++) {
+			if( number>>i <= 1 ){
 				color = colors[i];
 				break;
 			}

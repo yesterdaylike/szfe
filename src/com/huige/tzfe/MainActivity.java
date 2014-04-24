@@ -8,35 +8,12 @@ import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
-import android.view.animation.TranslateAnimation;
 import android.widget.TextView;
 
 public class MainActivity extends Activity implements PrintInterface{
 
-	int viewIds[] = {
-			R.id.tile0,
-			R.id.tile1,
-			R.id.tile2,
-			R.id.tile3,
-			R.id.tile4,
-			R.id.tile5,
-			R.id.tile6,
-			R.id.tile7,
-			R.id.tile8,
-			R.id.tile9,
-			R.id.tile10,
-			R.id.tile11,
-			R.id.tile12,
-			R.id.tile13,
-			R.id.tile14,
-			R.id.tile15,
-	};
-
 	private int direction;
 
-	TextView[] tileView = new TextView[16];
 	private GameManager game;
 
 	private String TAG = "tzfe";
@@ -45,24 +22,22 @@ public class MainActivity extends Activity implements PrintInterface{
 	TextView messageTextView;
 	TextView stepTextView;
 	TextView scoreTextView;
+	private TableView tableLayout;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		for (int i = 0; i < viewIds.length; i++) {
-			tileView[i] = (TextView)findViewById(viewIds[i]);
-		}
+		tableLayout = (TableView)findViewById(R.id.table);
 
 		stepTextView = (TextView)findViewById(R.id.step);
 		scoreTextView = (TextView)findViewById(R.id.score);
 
 		game = new GameManager(MainActivity.this);
-		print();
 
 		messageTextView = (TextView)findViewById(R.id.message);
-		View tableLayout = findViewById(R.id.table);
+		tableLayout = (TableView) findViewById(R.id.table);
 
 		// Gesture detection
 		gestureDetector = new GestureDetector(this, new MyGestureDetector());
@@ -73,6 +48,7 @@ public class MainActivity extends Activity implements PrintInterface{
 		};
 
 		tableLayout.setOnTouchListener(gestureListener);
+		print();
 	}
 
 	class MyGestureDetector extends SimpleOnGestureListener {
@@ -137,15 +113,18 @@ public class MainActivity extends Activity implements PrintInterface{
 	}
 
 	private void print(){
-		Tile[][] tileValus = game.grid.cells;
-		Tile tile;
+		Tile[][] tiles = game.grid.cells;
+		tableLayout.setDraw(tiles);
+		tableLayout.invalidate();
+		//tableLayout.draw(tileValus);
+		/*Tile tile;
 		for(int i = 0; i < tileView.length; i++ ){
 			tile = tileValus[i/4][i%4];
 			printView(tileView[i], tile);
-		}
-	} 
+		}*/
+	}
 
-	private void printView(TextView view, Tile tile){
+	/*private void printView(TextView view, Tile tile){
 		if( 0 == tile.value ){
 			view.setText("");
 		}
@@ -154,7 +133,7 @@ public class MainActivity extends Activity implements PrintInterface{
 		}
 
 		view.setBackgroundColor(Util.getColor(tile.value));
-	}
+	}*/
 
 	public void onClickUndo(View view){
 		if( game.undo ){
@@ -185,44 +164,11 @@ public class MainActivity extends Activity implements PrintInterface{
 	@Override
 	public void moveView(final Tile from, final Tile to) {
 		messageTextView.append("from["+from.heigth+","+from.width+"]:"+from.value+" > to["+to.heigth+","+to.width+"]:"+to.value+"\n");
-		
-		// TODO Auto-generated method stub
-		/*final TextView fromView = (TextView) getViewByTile(from);
-		final TextView toView = (TextView) getViewByTile(to);
-
-		int toXDelta = toView.getLeft() - fromView.getLeft();
-		int toYDelta = toView.getTop() - fromView.getTop();
-
-		fromView.getWidth();
-		TranslateAnimation ta = new TranslateAnimation(0, toXDelta, 0, toYDelta);
-		ta.setDuration(1000);
-		ta.setAnimationListener(new AnimationListener() {
-
-			@Override
-			public void onAnimationStart(Animation animation) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void onAnimationRepeat(Animation animation) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void onAnimationEnd(Animation animation) {
-				// TODO Auto-generated method stub
-				printView(fromView, from);
-				printView(toView, to);
-			}
-		});
-		fromView.startAnimation(ta);*/
 	}
 
-	private View getViewByTile(Tile tile){
+	/*private View getViewByTile(Tile tile){
 		View view = tileView[ ( tile.heigth << 2 ) + tile.width ];
 		return view;
-	}
+	}*/
 
 }
