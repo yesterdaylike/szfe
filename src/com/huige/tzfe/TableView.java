@@ -19,25 +19,48 @@ public class TableView extends TextView {
 	private Paint paint;			//方块画笔
 	private Paint paintText;		//字符画笔
 
-	private int height = 0;			//view总的高度
-	private int width = 0;			//view总的宽度
 	private Rect rect;				//view的矩形范围
-
-	private int cellHeight = 0;		//小方块的高度
-	private int cellWidth = 0;		//小方块的宽度
 	private RectF cellRect;			//小方块的矩形范围
-
-	private float halfHeightText;	//字符高度的一半
-	private float halfWidthText;	//字符宽度的一半
-
-	private int positionWText;		//字符的中心位置之w轴上
-	private int positionHText;		//字符的中心位置之w轴上
 
 	private int value;				//int型
 	private String valueStr;		//String型
 
 	private Object[] from;				
-	private Object[] to;				
+	private Object[] to;	
+	private Tile curForm;
+	private Tile curTo;
+
+	private int index;
+	private int step;
+
+	int stepIntervalH;
+	int stepIntervalW;
+	private int IntervalH = 0;
+	private int IntervalW = 0;
+
+	private Tile randomTile = null;
+
+	private boolean mInitPosition = false;
+	private boolean animation = false;
+	private int count = 0;
+	private int[] dirParam = { 0,					1,	0, 					1	};
+
+	int []positionsH;
+	int []positionsW;
+
+	float []positionsHText;
+	float []positionsWText;
+
+	private Handler handler = new Handler();
+
+	private Runnable runnable= new Runnable() {
+		public void run() {  
+			handler.postDelayed(this, 2);
+			TableView.this.postInvalidate();
+			count++;
+			Log.i("zhengwenhui", "count: "+count);
+		}  
+	};
 
 	public TableView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -48,41 +71,94 @@ public class TableView extends TextView {
 		paintText.setTextSize(24);
 	}
 
+	private void initPositionlist(){
+		int height = getHeight();	//view总的高度
+		int width = getWidth(); 	//view总的宽度
+
+		int cellHeight = height >> 2;//小方块的高度
+		int cellWidth = width >> 2;  //小方块的宽度
+
+		stepIntervalH = cellHeight >> 3;//小方块的高度
+		stepIntervalW = cellWidth >> 3;  //小方块的宽度
+
+		float halfHeightText = paintText.getTextSize() /2 ;
+
+		positionsH = new int[5];
+		positionsW = new int[5];
+
+		positionsHText = new float[5];
+		positionsWText = new float[5];
+
+		for(int h = 0; h < 5; h++){
+			positionsH[h] = cellHeight * h;
+			positionsHText[h] = positionsH[h] + ( cellHeight >> 1 ) + halfHeightText;
+			for(int w = 0; w < 5; w++){
+				positionsW[w] = cellWidth * w;
+				positionsWText[w] = positionsW[w] + ( cellWidth >> 1 );
+
+				Log.i(TAG, "Rect ["+positionsW[w]+","+positionsH[h]+"]");
+			}
+		}
+
+		rect = new Rect(0, 0, width, height);
+		cellRect = new RectF();
+	}
+
 	@Override
 	protected void onDraw(Canvas canvas) {
-		if( 0 == height ){
-			height = getHeight();
-			width = getWidth();
-
-			cellHeight = height >> 2;
-			cellWidth = width >> 2;
-
-			rect = new Rect(0, 0, width, height);
-			cellRect = new RectF();
-
-			halfHeightText = paintText.getTextSize() /2 ;
+		
+		Log.i("zhengwenhui", "onDraw");
+		
+		if( !mInitPosition ){
+			initPositionlist();
+			mInitPosition = true;
 		}
+
+		if(animation){
+			index = count >> 3;
+			step = count % 8 + 1;
+			if (index < from.length) {
+				curForm = (Tile) from[index];
+				curTo = (Tile) to[index];
+			} else {
+				handler.removeCallbacks(runnable);
+				animation = false;
+			}
+		}
+
 		paint.setColor(Util.getColor(0));
 		canvas.drawRect(rect, paint);
 
-		for (int h = 0, positionH = 0; h < 4; h++, positionH += cellHeight) {
-			for (int w = 0, positionW = 0; w < 4; w++, positionW += cellWidth) {
+		for(int h = dirParam[0]; Grid.withinHeight(h); h+=dirParam[1]){
+			for(int w = dirParam[2]; Grid.withinHeight(w); w+= dirParam[3]){
+				IntervalH = 0;
+				IntervalW = 0;
+				Log.v(TAG, "for for ["+h+","+w+"] previousValue:"+tiles[h][w].previousValue);
 
-				value = tiles[h][w].value;
+				if( animation ){
+					if ( h == curForm.heigth && w == curForm.width && ( curTo.previousValue == 0 || step <=4 ) ) {
+						IntervalH = ( ( curTo.heigth - curForm.heigth ) * stepIntervalH * step );
+						IntervalW = ( ( curTo.width - curForm.width ) * stepIntervalW * step );
+					} else if( h == curTo.heigth && w == curTo.width ){
+						if( curTo.previousValue == 0 && step == 8 || curTo.previousValue != 0 && step == 5 ){
+							curTo.previousValue += curForm.previousValue;
+							curForm.previousValue = 0;
+						}
+					}
+					value = tiles[h][w].previousValue;
+				}
+				else{
+					value = tiles[h][w].value;
+				}
 
-				cellRect.set(positionW+1, positionH+1, positionW+cellWidth-1, positionH+cellHeight-1);
+				cellRect.set(positionsW[w]+IntervalW, positionsH[h]+IntervalH, positionsW[w+1]+IntervalW, positionsH[h+1]+IntervalH);
 				paint.setColor( Util.getColor( value ) );
 				canvas.drawRoundRect(cellRect, 5f, 5f, paint);
 
 				if( value > 0 ){
 					valueStr = String.valueOf(value);
-
-					positionWText = positionW + ( cellWidth >> 1 );
-					positionHText = positionH + ( cellHeight >> 1 );
-
-					halfWidthText = paintText.measureText(valueStr) /2;
-
-					canvas.drawText(valueStr, positionWText - halfWidthText, positionHText + halfHeightText, paintText);
+					float halfWidthText = paintText.measureText(valueStr) /2;
+					canvas.drawText(valueStr, positionsWText[w] + IntervalW - halfWidthText, positionsHText[h]+IntervalH, paintText);
 				}
 			}
 		}
@@ -92,23 +168,35 @@ public class TableView extends TextView {
 		this.tiles = tiles;
 	}
 
-	public void moveViewsStepAnimation(Object[] from, Object[] to){
-		/*this.from = from;
+	public void moveViewsStepAnimation(Object[] from, Object[] to, int[] directionParameter){
+		this.from = from;
 		this.to = to;
-		for (Object object : to) {
-
-		}*/
-		Log.e("zhengwenhui", "================================");
+		count = 0;
+		animation = true;
 		handler.post(runnable);
+		//handler.removeCallbacks(runnable);
+		this.dirParam = directionParameter;
+
+		for( int i = 0; i < from.length; i++){
+			curForm = (Tile) from[i];
+			curTo = (Tile) to[i];
+			Log.i("from", "from["+curForm.heigth+","+curForm.width+"]:"+curForm.value+" > to["+curTo.heigth+","+curTo.width+"]:"+curTo.value+"\n");
+		}
+
+		for( int i = 0; i < from.length; i++){
+			curForm = (Tile) from[i];
+			curTo = (Tile) to[i];
+			Log.i("from", "pfrom["+curForm.heigth+","+curForm.width+"]:"+curForm.previousValue+" > to["+curTo.heigth+","+curTo.width+"]:"+curTo.previousValue+"\n");
+		}
 	}
 
-	private Handler handler = new Handler();  
-	private int count = 0;
-	private Runnable runnable= new Runnable() {    
-		public void run() {  
-			handler.postDelayed(this, 500);
-			Log.i("zhengwenhui", "count: "+count);
-			count++;
-		}  
-	}; 
+	public void addRandomTile(Tile newTile) {
+		// TODO Auto-generated method stub
+		randomTile = newTile;
+		//invalidate();
+	}
+
+	public boolean isAnimation(){
+		return animation;
+	}
 }

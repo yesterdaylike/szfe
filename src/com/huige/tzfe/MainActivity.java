@@ -49,7 +49,7 @@ public class MainActivity extends Activity implements PrintInterface{
 		};
 
 		tableLayout.setOnTouchListener(gestureListener);
-		print();
+		//print();
 	}
 
 	class MyGestureDetector extends SimpleOnGestureListener {
@@ -95,13 +95,19 @@ public class MainActivity extends Activity implements PrintInterface{
 					direction = 2;
 				}
 			}
-			
+
 			messageTextView.append(str);
 			messageTextView.append("\n");
-			
-			if( direction >= 0){
+
+
+			String str1 = tableLayout.isAnimation() ? "is Animation " : "not Animation";
+
+			messageTextView.append(str1);
+			messageTextView.append("\n");
+
+			if( direction >= 0 && !tableLayout.isAnimation()){
 				game.Move(direction);
-				print();
+				//print();
 			}
 			return false;
 		}
@@ -113,14 +119,14 @@ public class MainActivity extends Activity implements PrintInterface{
 		}
 	}
 
-	private void print(){
+	/*private void print(){
 		tableLayout.invalidate();
-	}
+	}*/
 
 	public void onClickUndo(View view){
 		if( game.undo ){
 			game.undoMove(direction);
-			print();
+			//print();
 		}
 	}
 
@@ -147,36 +153,32 @@ public class MainActivity extends Activity implements PrintInterface{
 	public void moveView(final Tile from, final Tile to) {
 		messageTextView.append("from["+from.heigth+","+from.width+"]:"+from.value+" > to["+to.heigth+","+to.width+"]:"+to.value+"\n");
 	}
-	/*private View getViewByTile(Tile tile){
-		View view = tileView[ ( tile.heigth << 2 ) + tile.width ];
-		return view;
-	}*/
 
 	@Override
-	public void moveViewsSetp(Object[] from, Object[] to) {
+	public void moveViewsSetp(Object[] from, Object[] to, int direction) {
 		// TODO Auto-generated method stub
-
-		StringBuffer sb = new StringBuffer("\n");
-		Tile[][] cells = game.grid.cells;
-		
-		for (int h = 0; h < 4; h++) {
-			for (int w = 0; w < 4; w++) {
-				sb.append(String.format(" %2d ", cells[h][w].previousValue));
-			}
-			sb.append("  >>>>  ");
-			for (int w = 0; w < 4; w++) {
-				sb.append(String.format(" %2d ", cells[h][w].value));
-			}
-			sb.append("\n");
-		}
-		messageTextView.append(sb.toString());
-		
-		tableLayout.moveViewsStepAnimation(from, to);
+		tableLayout.moveViewsStepAnimation(from, to, game.getParameter(direction));
 	}
 
 	@Override
 	public void addRandomTile(Tile newTile) {
 		// TODO Auto-generated method stub
+		StringBuffer sb = new StringBuffer("\n");
+		if( null != game){
+			Tile[][] cells = game.grid.cells;
 
+			for (int h = 0; h < 4; h++) {
+				for (int w = 0; w < 4; w++) {
+					sb.append(String.format(" %2d ", cells[h][w].previousValue));
+				}
+				sb.append("  >>>>  ");
+				for (int w = 0; w < 4; w++) {
+					sb.append(String.format(" %2d ", cells[h][w].value));
+				}
+				sb.append("\n");
+			}
+			messageTextView.append(sb.toString());
+		}
+		tableLayout.addRandomTile(newTile);
 	}
 }

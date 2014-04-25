@@ -8,17 +8,17 @@ import android.util.Log;
 import com.huige.tzfe.GameManager.Point;
 
 public class Grid {
-	int height_size = 4;
-	int width_size = 4;
+	static int height_size = 4;
+	static int width_size = 4;
 	Tile [][] cells;
 	String TAG = "tzfe Grid";
 
-	Grid(int height_size, int width_size) {
+	/*Grid(int height_size, int width_size) {
 		this.height_size = height_size;
 		this.width_size = width_size;
 		cells = new Tile[height_size][width_size];
 		empty();
-	}
+	}*/
 
 	Grid() {
 		cells = new Tile[height_size][width_size];
@@ -89,22 +89,22 @@ public class Grid {
 		return max;
 	}
 
-	boolean withinBounds(int height, int width) {
+	static boolean withinBounds(int height, int width) {
 		return height >= 0 && height < height_size &&
 				width >= 0 && width < width_size;
 	}
 
-	boolean withinBounds(Point position) {
+	static boolean withinBounds(Point position) {
 		return position.heigth >= 0 && position.heigth < height_size &&
 				position.width >= 0 && position.width < width_size;
 	}
 
-	boolean withinHeight(int height) {
+	static  boolean withinHeight(int height) {
 		return height >= 0 && height < height_size;
 	}
 
 	//
-	boolean withinWidth(int width) {
+	static  boolean withinWidth(int width) {
 		return width >= 0 && width < width_size;
 	}
 }

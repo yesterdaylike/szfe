@@ -1,8 +1,6 @@
 package com.huige.tzfe;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 import android.util.Log;
 
@@ -66,10 +64,10 @@ public class GameManager {
 	int[] getParameter(int direction) {
 		// Vectors representing tile movement
 		int[][] map = {
-				{ 1,					1,	0, 					1	}, // Up
-				{ 0,					1,	grid.width_size-2,	-1	}, // Right
-				{ grid.height_size-2 ,	-1, 0, 					1	},  // Down
-				{ 0, 					1,	1,					1	},  // Left
+				{ 0,					1,	0, 					1	}, // Up
+				{ 0,					1,	grid.width_size-1,	-1	}, // Right
+				{ grid.height_size-1 ,	-1, 0, 					1	},  // Down
+				{ 0, 					1,	0,					1	},  // Left
 		};
 
 		return map[direction];
@@ -228,8 +226,8 @@ public class GameManager {
 
 		if (moved) {
 			Log.i(TAG, "moved");
-			mPrintInterface.moveViewsSetp(formTiles.toArray(), toTiles.toArray());
 			addRandomTile();
+			mPrintInterface.moveViewsSetp(formTiles.toArray(), toTiles.toArray(), direction);
 			mPrintInterface.printSteps(++step);
 			if (!movesAvailable()) {
 				Log.i(TAG, "over");
