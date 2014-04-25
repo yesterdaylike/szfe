@@ -25,13 +25,13 @@ public class TableView extends TextView {
 	private int value;				//int–Õ
 	private String valueStr;		//String–Õ
 
-	private Object[] from;				
-	private Object[] to;	
+	private Tile[] fromTiles;				
+	private Tile[] toTiles;	
 	private Tile curForm;
 	private Tile curTo;
 
-	private int index;
-	private int step;
+	//private int index;
+	//private int step;
 
 	int stepIntervalH;
 	int stepIntervalW;
@@ -39,6 +39,7 @@ public class TableView extends TextView {
 	private int IntervalW = 0;
 
 	private Tile randomTile = null;
+	int []stepSign;
 
 	private boolean mInitPosition = false;
 	private boolean animation = false;
@@ -95,8 +96,6 @@ public class TableView extends TextView {
 			for(int w = 0; w < 5; w++){
 				positionsW[w] = cellWidth * w;
 				positionsWText[w] = positionsW[w] + ( cellWidth >> 1 );
-
-				Log.i(TAG, "Rect ["+positionsW[w]+","+positionsH[h]+"]");
 			}
 		}
 
@@ -106,9 +105,6 @@ public class TableView extends TextView {
 
 	@Override
 	protected void onDraw(Canvas canvas) {
-		
-		Log.i("zhengwenhui", "onDraw");
-		
 		if( !mInitPosition ){
 			initPositionlist();
 			mInitPosition = true;
@@ -117,9 +113,9 @@ public class TableView extends TextView {
 		if(animation){
 			index = count >> 3;
 			step = count % 8 + 1;
-			if (index < from.length) {
-				curForm = (Tile) from[index];
-				curTo = (Tile) to[index];
+			if (index < fromTiles.length) {
+				curForm = fromTiles[index];
+				curTo = toTiles[index];
 			} else {
 				handler.removeCallbacks(runnable);
 				animation = false;
@@ -133,7 +129,7 @@ public class TableView extends TextView {
 			for(int w = dirParam[2]; Grid.withinHeight(w); w+= dirParam[3]){
 				IntervalH = 0;
 				IntervalW = 0;
-				Log.v(TAG, "for for ["+h+","+w+"] previousValue:"+tiles[h][w].previousValue);
+				//Log.v(TAG, "for for ["+h+","+w+"] previousValue:"+tiles[h][w].previousValue);
 
 				if( animation ){
 					if ( h == curForm.heigth && w == curForm.width && ( curTo.previousValue == 0 || step <=4 ) ) {
@@ -169,24 +165,58 @@ public class TableView extends TextView {
 	}
 
 	public void moveViewsStepAnimation(Object[] from, Object[] to, int[] directionParameter){
-		this.from = from;
-		this.to = to;
 		count = 0;
 		animation = true;
-		handler.post(runnable);
-		//handler.removeCallbacks(runnable);
-		this.dirParam = directionParameter;
-
-		for( int i = 0; i < from.length; i++){
+		
+		int length = from.length;
+		
+		fromTiles = new Tile[length];
+		toTiles = new Tile[length];
+		
+		Tile last = null;
+		stepSign = new int[length];
+		
+		for( int i = 0, whichstep = 0; i < length; i++){
 			curForm = (Tile) from[i];
 			curTo = (Tile) to[i];
-			Log.i("from", "from["+curForm.heigth+","+curForm.width+"]:"+curForm.value+" > to["+curTo.heigth+","+curTo.width+"]:"+curTo.value+"\n");
+			
+			fromTiles[i] = curForm;
+			toTiles[i] = curTo;
+			
+			if( null != last && last.heigth==curForm.heigth && last.width==curForm.width){
+				whichstep++;
+			}
+			else{
+				whichstep = 0;
+			}
+			stepSign[i] = whichstep;
+			Log.i(TAG, "["+ i +"] :"+stepSign[i]);
+			last = toTiles[i];
 		}
-
-		for( int i = 0; i < from.length; i++){
-			curForm = (Tile) from[i];
-			curTo = (Tile) to[i];
-			Log.i("from", "pfrom["+curForm.heigth+","+curForm.width+"]:"+curForm.previousValue+" > to["+curTo.heigth+","+curTo.width+"]:"+curTo.previousValue+"\n");
+		
+		handler.post(runnable);
+		this.dirParam = directionParameter;
+	}
+	
+	private void setIn(int timer){
+		int index = timer >> 3;
+		int step = timer % 8;
+		
+		boolean hasStep = false;
+		
+		for (int i = 0; i < fromTiles.length; i++) {
+			if( index == stepSign[i] ){
+				hasStep = true;
+				curForm = fromTiles[i];
+				curTo = toTiles[i];
+				IntervalH = ( ( curTo.heigth - curForm.heigth ) * stepIntervalH * step );
+				IntervalW = ( ( curTo.width - curForm.width ) * stepIntervalW * step );
+			}
+		}
+		
+		if(!hasStep){
+			handler.removeCallbacks(runnable);
+			animation = false;
 		}
 	}
 
