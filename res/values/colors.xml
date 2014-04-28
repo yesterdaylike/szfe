@@ -2,5 +2,6 @@
 <resources>
 
     <color name="table_background">#fffff6df</color>
+    <color name="background">#ff123146</color>
 
 </resources>

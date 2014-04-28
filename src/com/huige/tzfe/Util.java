@@ -7,20 +7,21 @@ public class Util {
 	static final int SWIPE_MAX_OFF_PATH = 250;
 	static final int SWIPE_THRESHOLD_VELOCITY = 200;
 
-	private static int []colors = {
-		0xffaaaaaa,
-		0xffffcccc,	//2
-		0xffffcc99,	//4
-		0xff99cccc,	//8
-		0xff99cc99,	//16
-		0xff66cccc,	//32
-		0xffccccff,	//64
-		0xffccff99,	//128
-		0xffccffff,	//256
-		0xffff9966,	//512
-		0xffff6666,	//1024
-		0xffcc3399,	//2048
-		0xff9933cc,	//4096
+	public static int []colors = {
+		R.drawable.c2,
+		R.drawable.c4,
+		R.drawable.c8,
+		R.drawable.c16,
+		R.drawable.c32,
+		R.drawable.c64,
+		R.drawable.c128,
+		R.drawable.c256,
+		R.drawable.c512,
+		R.drawable.c1024,
+		R.drawable.c2048,
+		R.drawable.c4096,
+		R.drawable.c8192,
+		R.drawable.c16384,
 	};
 
 	public static int getColor(int number){

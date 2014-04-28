@@ -1,6 +1,9 @@
 package com.huige.tzfe;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
@@ -30,13 +33,8 @@ public class TableView extends TextView {
 	private Tile curForm;
 	private Tile curTo;
 
-	//private int index;
-	//private int step;
-
 	int stepIntervalH;
 	int stepIntervalW;
-	private int IntervalH = 0;
-	private int IntervalW = 0;
 
 	private Tile randomTile = null;
 	int []stepSign;
@@ -52,11 +50,13 @@ public class TableView extends TextView {
 	float []positionsHText;
 	float []positionsWText;
 
+	Interval intervalGrid[][];
+
 	private Handler handler = new Handler();
 
 	private Runnable runnable= new Runnable() {
 		public void run() {  
-			handler.postDelayed(this, 2);
+			handler.postDelayed(this, 20);
 			TableView.this.postInvalidate();
 			count++;
 			Log.i("zhengwenhui", "count: "+count);
@@ -66,10 +66,12 @@ public class TableView extends TextView {
 	public TableView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		paint = new Paint();
-		paint.setStyle(Style.FILL);
+		//paint.setStyle(Style.FILL);
+		//paint.setAntiAlias(true);
 
 		paintText = new Paint();
-		paintText.setTextSize(24);
+		paintText.setTextSize(getResources().getDimension(R.dimen.textsize));
+		//paint.setAntiAlias(true);
 	}
 
 	private void initPositionlist(){
@@ -101,6 +103,13 @@ public class TableView extends TextView {
 
 		rect = new Rect(0, 0, width, height);
 		cellRect = new RectF();
+
+		intervalGrid = new Interval[4][4];
+		for(int h = 0; h < 4; h++){
+			for(int w = 0; w < 4; w++){
+				intervalGrid[h][w] = new Interval();
+			}
+		}
 	}
 
 	@Override
@@ -109,53 +118,40 @@ public class TableView extends TextView {
 			initPositionlist();
 			mInitPosition = true;
 		}
-
-		if(animation){
-			index = count >> 3;
-			step = count % 8 + 1;
-			if (index < fromTiles.length) {
-				curForm = fromTiles[index];
-				curTo = toTiles[index];
-			} else {
-				handler.removeCallbacks(runnable);
-				animation = false;
-			}
+		if (animation) {
+			setInit(count);
 		}
+		//paint.setColor(Util.getColor(0));
+		//canvas.drawRect(rect, paint);
 
-		paint.setColor(Util.getColor(0));
-		canvas.drawRect(rect, paint);
+		Interval interval;
 
 		for(int h = dirParam[0]; Grid.withinHeight(h); h+=dirParam[1]){
 			for(int w = dirParam[2]; Grid.withinHeight(w); w+= dirParam[3]){
-				IntervalH = 0;
-				IntervalW = 0;
 				//Log.v(TAG, "for for ["+h+","+w+"] previousValue:"+tiles[h][w].previousValue);
-
+				interval = intervalGrid[h][w];
 				if( animation ){
-					if ( h == curForm.heigth && w == curForm.width && ( curTo.previousValue == 0 || step <=4 ) ) {
-						IntervalH = ( ( curTo.heigth - curForm.heigth ) * stepIntervalH * step );
-						IntervalW = ( ( curTo.width - curForm.width ) * stepIntervalW * step );
-					} else if( h == curTo.heigth && w == curTo.width ){
-						if( curTo.previousValue == 0 && step == 8 || curTo.previousValue != 0 && step == 5 ){
-							curTo.previousValue += curForm.previousValue;
-							curForm.previousValue = 0;
-						}
-					}
 					value = tiles[h][w].previousValue;
 				}
 				else{
 					value = tiles[h][w].value;
 				}
 
-				cellRect.set(positionsW[w]+IntervalW, positionsH[h]+IntervalH, positionsW[w+1]+IntervalW, positionsH[h+1]+IntervalH);
-				paint.setColor( Util.getColor( value ) );
-				canvas.drawRoundRect(cellRect, 5f, 5f, paint);
+				cellRect.set(positionsW[w]+interval.w, positionsH[h]+interval.h, positionsW[w+1]+interval.w, positionsH[h+1]+interval.h);
+				//paint.setColor( Util.getColor( value ) );
+				//canvas.drawRoundRect(cellRect, 5f, 5f, paint);
+				if(value==0){
+					continue;
+				}
 
-				if( value > 0 ){
+				Bitmap bitmap = BitmapFactory.decodeResource(getResources(), Util.colors[my] );
+				canvas.drawBitmap(bitmap, null, cellRect, paint);
+
+				/*if( value > 0 ){
 					valueStr = String.valueOf(value);
 					float halfWidthText = paintText.measureText(valueStr) /2;
-					canvas.drawText(valueStr, positionsWText[w] + IntervalW - halfWidthText, positionsHText[h]+IntervalH, paintText);
-				}
+					canvas.drawText(valueStr, positionsWText[w] + interval.w - halfWidthText, positionsHText[h]+interval.h, paintText);
+				}*/
 			}
 		}
 	}
@@ -167,22 +163,22 @@ public class TableView extends TextView {
 	public void moveViewsStepAnimation(Object[] from, Object[] to, int[] directionParameter){
 		count = 0;
 		animation = true;
-		
+
 		int length = from.length;
-		
+
 		fromTiles = new Tile[length];
 		toTiles = new Tile[length];
-		
+
 		Tile last = null;
 		stepSign = new int[length];
-		
+
 		for( int i = 0, whichstep = 0; i < length; i++){
 			curForm = (Tile) from[i];
 			curTo = (Tile) to[i];
-			
+
 			fromTiles[i] = curForm;
 			toTiles[i] = curTo;
-			
+
 			if( null != last && last.heigth==curForm.heigth && last.width==curForm.width){
 				whichstep++;
 			}
@@ -193,27 +189,41 @@ public class TableView extends TextView {
 			Log.i(TAG, "["+ i +"] :"+stepSign[i]);
 			last = toTiles[i];
 		}
-		
+
 		handler.post(runnable);
 		this.dirParam = directionParameter;
 	}
-	
-	private void setIn(int timer){
+
+	private void setInit(int timer){
 		int index = timer >> 3;
-		int step = timer % 8;
-		
+		int step = timer % 8 + 1;
+
 		boolean hasStep = false;
-		
+
+		for (Interval[] intervalArray : intervalGrid) {
+			for (Interval intervalElement : intervalArray) {
+				intervalElement.h = 0;
+				intervalElement.w = 0;
+			}
+		}
+
 		for (int i = 0; i < fromTiles.length; i++) {
 			if( index == stepSign[i] ){
 				hasStep = true;
 				curForm = fromTiles[i];
 				curTo = toTiles[i];
-				IntervalH = ( ( curTo.heigth - curForm.heigth ) * stepIntervalH * step );
-				IntervalW = ( ( curTo.width - curForm.width ) * stepIntervalW * step );
+				Interval intervalFrom = intervalGrid[curForm.heigth][curForm.width];
+
+				if( step == 8 ){
+					curTo.previousValue += curForm.previousValue;
+					curForm.previousValue = 0;
+				}else{
+					intervalFrom.h = ( ( curTo.heigth - curForm.heigth ) * stepIntervalH * step );
+					intervalFrom.w = ( ( curTo.width - curForm.width ) * stepIntervalW * step );
+				}
 			}
 		}
-		
+
 		if(!hasStep){
 			handler.removeCallbacks(runnable);
 			animation = false;
@@ -228,5 +238,11 @@ public class TableView extends TextView {
 
 	public boolean isAnimation(){
 		return animation;
+	}
+
+	class Interval{
+		int h = 0;
+		int w = 0;
+		int size = 0;
 	}
 }
