@@ -26,11 +26,22 @@ public class Util {
 
 	public static int getColor(int number){
 		int color = colors[0];
-		for (int i = 0; i < colors.length; i++) {
-			if( number>>i <= 1 ){
-				color = colors[i];
-				break;
-			}
+		switch (number) {
+		case 2: color = colors[0];  break;
+		case 4: color = colors[1];  break;
+		case 8: color = colors[2];  break;
+		case 16: color = colors[3];  break;
+		case 32: color = colors[4];  break;
+		case 64: color = colors[5];  break;
+		case 128: color = colors[6];  break;
+		case 256: color = colors[7];  break;
+		case 512: color = colors[8];  break;
+		case 1024: color = colors[9];  break;
+		case 2048: color = colors[10];  break;
+		case 4096: color = colors[11];  break;
+		case 8192: color = colors[12];  break;
+		case 16384: color = colors[13];  break;
+		default: break;
 		}
 		return color;
 	}

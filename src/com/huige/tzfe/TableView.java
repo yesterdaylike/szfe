@@ -56,7 +56,7 @@ public class TableView extends TextView {
 
 	private Runnable runnable= new Runnable() {
 		public void run() {  
-			handler.postDelayed(this, 20);
+			handler.postDelayed(this, 5);
 			TableView.this.postInvalidate();
 			count++;
 			Log.i("zhengwenhui", "count: "+count);
@@ -144,7 +144,7 @@ public class TableView extends TextView {
 					continue;
 				}
 
-				Bitmap bitmap = BitmapFactory.decodeResource(getResources(), Util.colors[my] );
+				Bitmap bitmap = BitmapFactory.decodeResource(getResources(), Util.getColor(value) );
 				canvas.drawBitmap(bitmap, null, cellRect, paint);
 
 				/*if( value > 0 ){
