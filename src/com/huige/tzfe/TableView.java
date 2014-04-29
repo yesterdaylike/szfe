@@ -1,12 +1,10 @@
 package com.huige.tzfe;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Paint.Style;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.Handler;
@@ -20,13 +18,12 @@ public class TableView extends TextView {
 	private Tile[][] tiles;
 
 	private Paint paint;			//方块画笔
-	private Paint paintText;		//字符画笔
-
-	private Rect rect;				//view的矩形范围
+	//private Paint paintText;		//字符画笔
+	//private Rect rect;				//view的矩形范围
 	private RectF cellRect;			//小方块的矩形范围
 
 	private int value;				//int型
-	private String valueStr;		//String型
+	//private String valueStr;		//String型
 
 	private Tile[] fromTiles;				
 	private Tile[] toTiles;	
@@ -47,10 +44,9 @@ public class TableView extends TextView {
 	int []positionsH;
 	int []positionsW;
 
-	float []positionsHText;
-	float []positionsWText;
-
 	Interval intervalGrid[][];
+	
+	private Util util;
 
 	private Handler handler = new Handler();
 
@@ -65,13 +61,11 @@ public class TableView extends TextView {
 
 	public TableView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		paint = new Paint();
-		//paint.setStyle(Style.FILL);
-		//paint.setAntiAlias(true);
-
-		paintText = new Paint();
-		paintText.setTextSize(getResources().getDimension(R.dimen.textsize));
-		//paint.setAntiAlias(true);
+		paint=new Paint();
+        paint.setAntiAlias(true); 
+        paint.setFilterBitmap(true);
+        paint.setDither(true);
+        util = new Util(getResources());
 	}
 
 	private void initPositionlist(){
@@ -84,24 +78,24 @@ public class TableView extends TextView {
 		stepIntervalH = cellHeight >> 3;//小方块的高度
 		stepIntervalW = cellWidth >> 3;  //小方块的宽度
 
-		float halfHeightText = paintText.getTextSize() /2 ;
+		//float halfHeightText = paintText.getTextSize() /2 ;
 
 		positionsH = new int[5];
 		positionsW = new int[5];
 
-		positionsHText = new float[5];
-		positionsWText = new float[5];
+		//positionsHText = new float[5];
+		//positionsWText = new float[5];
 
 		for(int h = 0; h < 5; h++){
 			positionsH[h] = cellHeight * h;
-			positionsHText[h] = positionsH[h] + ( cellHeight >> 1 ) + halfHeightText;
+			//positionsHText[h] = positionsH[h] + ( cellHeight >> 1 ) + halfHeightText;
 			for(int w = 0; w < 5; w++){
 				positionsW[w] = cellWidth * w;
-				positionsWText[w] = positionsW[w] + ( cellWidth >> 1 );
+				//positionsWText[w] = positionsW[w] + ( cellWidth >> 1 );
 			}
 		}
 
-		rect = new Rect(0, 0, width, height);
+		//rect = new Rect(0, 0, width, height);
 		cellRect = new RectF();
 
 		intervalGrid = new Interval[4][4];
@@ -121,8 +115,6 @@ public class TableView extends TextView {
 		if (animation) {
 			setInit(count);
 		}
-		//paint.setColor(Util.getColor(0));
-		//canvas.drawRect(rect, paint);
 
 		Interval interval;
 
@@ -138,20 +130,12 @@ public class TableView extends TextView {
 				}
 
 				cellRect.set(positionsW[w]+interval.w, positionsH[h]+interval.h, positionsW[w+1]+interval.w, positionsH[h+1]+interval.h);
-				//paint.setColor( Util.getColor( value ) );
-				//canvas.drawRoundRect(cellRect, 5f, 5f, paint);
 				if(value==0){
 					continue;
 				}
 
-				Bitmap bitmap = BitmapFactory.decodeResource(getResources(), Util.getColor(value) );
+				Bitmap bitmap = util.getBitmap(value);
 				canvas.drawBitmap(bitmap, null, cellRect, paint);
-
-				/*if( value > 0 ){
-					valueStr = String.valueOf(value);
-					float halfWidthText = paintText.measureText(valueStr) /2;
-					canvas.drawText(valueStr, positionsWText[w] + interval.w - halfWidthText, positionsHText[h]+interval.h, paintText);
-				}*/
 			}
 		}
 	}
