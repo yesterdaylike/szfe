@@ -16,12 +16,9 @@ public class TableView extends TextView {
 	private Tile[][] tiles;
 
 	private Paint paint;			//·½¿é»­±Ê
-	//private Paint paintText;		//×Ö·û»­±Ê
-	//private Rect rect;				//viewµÄ¾ØÐÎ·¶Î§
 	private RectF cellRect;			//Ð¡·½¿éµÄ¾ØÐÎ·¶Î§
 
 	private int value;				//intÐÍ
-	//private String valueStr;		//StringÐÍ
 
 	private Tile[] fromTiles;				
 	private Tile[] toTiles;	
@@ -51,9 +48,14 @@ public class TableView extends TextView {
 	private Runnable runnable= new Runnable() {
 		public void run() {  
 			handler.postDelayed(this, 5);
+			Log.i("zhengwenhui", "count start: "+count);
 			TableView.this.postInvalidate();
 			count++;
 			Log.i("zhengwenhui", "count: "+count);
+			if(count>96){
+				handler.removeCallbacks(runnable);
+				animation = false;
+			}
 		}  
 	};
 
@@ -106,6 +108,7 @@ public class TableView extends TextView {
 
 	@Override
 	protected void onDraw(Canvas canvas) {
+		Log.i("zhengwenhui", "onDraw:"+count);
 		if( !mInitPosition ){
 			initPositionlist();
 			mInitPosition = true;
@@ -143,10 +146,12 @@ public class TableView extends TextView {
 	}
 
 	public void moveViewsStepAnimation(Object[] from, Object[] to, int[] directionParameter){
+		Log.e(TAG, "[moveViewsStepAnimation]");
 		count = 0;
 		animation = true;
 
 		int length = from.length;
+		Log.e(TAG, "length:"+length);
 
 		fromTiles = new Tile[length];
 		toTiles = new Tile[length];
@@ -181,6 +186,8 @@ public class TableView extends TextView {
 		int step = timer % 8 + 1;
 
 		boolean hasStep = false;
+		
+		Log.i(TAG, "[setInit] timer: "+timer);
 
 		for (Interval[] intervalArray : intervalGrid) {
 			for (Interval intervalElement : intervalArray) {

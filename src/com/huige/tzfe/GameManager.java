@@ -240,6 +240,7 @@ public class GameManager {
 		if (moved) {
 			Log.i(TAG, "moved");
 			addRandomTile();
+			Log.i(TAG, "mPrintInterface.moveViewsSetp(formTiles.toArray(), toTiles.toArray(), direction)");
 			mPrintInterface.moveViewsSetp(formTiles.toArray(), toTiles.toArray(), direction);
 			mPrintInterface.printSteps(++step);
 			if (!movesAvailable()) {

@@ -21,30 +21,22 @@ public class MainActivity extends Activity implements PrintInterface{
 	private String TAG = "tzfe";
 	private GestureDetector gestureDetector;
 	View.OnTouchListener gestureListener;
-	TextView messageTextView;
 	TextView stepTextView;
 	TextView scoreTextView;
 	private TableView tableLayout;
 
 	private Typeface mAndroidClockMonoThin, mAndroidClockMonoBold;
 
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
 		tableLayout = (TableView)findViewById(R.id.table);
-
 		stepTextView = (TextView)findViewById(R.id.step);
 		scoreTextView = (TextView)findViewById(R.id.score);
-		TypefaceSet();
-
-		game = new GameManager(MainActivity.this);
-
-		messageTextView = (TextView)findViewById(R.id.message);
-		tableLayout = (TableView) findViewById(R.id.table);
-		tableLayout.setDraw(game.grid.cells);
-
+		TypefaceSet();                                     
 		// Gesture detection
 		gestureDetector = new GestureDetector(this, new MyGestureDetector());
 		gestureListener = new View.OnTouchListener() {
@@ -54,17 +46,28 @@ public class MainActivity extends Activity implements PrintInterface{
 		};
 
 		tableLayout.setOnTouchListener(gestureListener);
+
+		game = (GameManager)getLastNonConfigurationInstance();
+		if( null == game ){  
+			game = new GameManager(MainActivity.this);
+		}
+		else{
+			tableLayout.invalidate();
+		}
+		tableLayout.setDraw(game.grid.cells);
+	}
+
+	@Override
+	public Object onRetainNonConfigurationInstance() {
+		return game;
 	}
 
 	class MyGestureDetector extends SimpleOnGestureListener {
 		@Override
 		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-			messageTextView.setText("onFling v  x:"+velocityX+",y:"+velocityY);
-			messageTextView.append("\n");
-			messageTextView.append("e1 x:"+e1.getX()+",y:"+e1.getY());
-			messageTextView.append("\n");
-			messageTextView.append("e2 x:"+e2.getX()+",y:"+e2.getY());
-			messageTextView.append("\n");
+			Log.i(TAG, "onFling v  x:"+velocityX+",y:"+velocityY);
+			Log.i(TAG, "e1 x:"+e1.getX()+",y:"+e1.getY());
+			Log.i(TAG, "e2 x:"+e2.getX()+",y:"+e2.getY());
 
 			float xInterval = e1.getX() - e2.getX();
 			float yInterval = e1.getY() - e2.getY();
@@ -72,17 +75,14 @@ public class MainActivity extends Activity implements PrintInterface{
 			float xIntervalAbs = Math.abs(xInterval);
 			float yIntervalAbs = Math.abs(yInterval);
 
-			String str = "null";
 			direction = -1;
 			if( xIntervalAbs > Util.SWIPE_MIN_DISTANCE && xIntervalAbs > yIntervalAbs*2){
 				if( xInterval > 0 ){
 					Log.i(TAG, "left");
-					str = "left";
 					direction = 3;
 				}
 				else{
 					Log.i(TAG, "right");
-					str = "right";
 					direction = 1;
 				}
 			}
@@ -90,28 +90,17 @@ public class MainActivity extends Activity implements PrintInterface{
 			if( yIntervalAbs > Util.SWIPE_MIN_DISTANCE && yIntervalAbs > xIntervalAbs*2){
 				if( yInterval > 0 ){
 					Log.i(TAG, "up");
-					str = "up";
 					direction = 0;
 				}
 				else{
 					Log.i(TAG, "down");
-					str = "down";
 					direction = 2;
 				}
 			}
-
-			messageTextView.append(str);
-			messageTextView.append("\n");
-
-
-			String str1 = tableLayout.isAnimation() ? "is Animation " : "not Animation";
-
-			messageTextView.append(str1);
-			messageTextView.append("\n");
+			Log.i(TAG, tableLayout.isAnimation() ? "is Animation " : "not Animation");
 
 			if( direction >= 0 && !tableLayout.isAnimation()){
 				game.Move(direction);
-				//print();
 			}
 			return false;
 		}
@@ -170,18 +159,21 @@ public class MainActivity extends Activity implements PrintInterface{
 
 	@Override
 	public void moveView(final Tile from, final Tile to) {
-		messageTextView.append("from["+from.heigth+","+from.width+"]:"+from.value+" > to["+to.heigth+","+to.width+"]:"+to.value+"\n");
+		Log.e(TAG, "Activity moveView");
+		Log.e(TAG, "from["+from.heigth+","+from.width+"]:"+from.value+" > to["+to.heigth+","+to.width+"]:"+to.value+"\n");
 	}
 
 	@Override
 	public void moveViewsSetp(Object[] from, Object[] to, int direction) {
 		// TODO Auto-generated method stub
+		Log.e(TAG, "Activity moveViewsSetp");
 		tableLayout.moveViewsStepAnimation(from, to, game.getParameter(direction));
 	}
 
 	@Override
 	public void addRandomTile(Tile newTile) {
 		// TODO Auto-generated method stub
+		Log.e(TAG, "Activity addRandomTile=====================");
 		StringBuffer sb = new StringBuffer("\n");
 		if( null != game){
 			Tile[][] cells = game.grid.cells;
@@ -196,7 +188,7 @@ public class MainActivity extends Activity implements PrintInterface{
 				}
 				sb.append("\n");
 			}
-			messageTextView.append(sb.toString());
+			Log.e(TAG, "sb.toString(): "+sb.toString());
 		}
 		tableLayout.addRandomTile(newTile);
 	}
