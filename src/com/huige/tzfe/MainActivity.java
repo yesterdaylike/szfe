@@ -1,6 +1,7 @@
 package com.huige.tzfe;
 
 import android.app.Activity;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -23,6 +24,9 @@ public class MainActivity extends Activity implements PrintInterface{
 	TextView stepTextView;
 	TextView scoreTextView;
 	private TableView tableLayout;
+	
+	private Typeface mAndroidClockMonoThin, mAndroidClockMonoBold, mAndroidClockMonoLight    ;
+	private Typeface mRobotoLabel;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +37,7 @@ public class MainActivity extends Activity implements PrintInterface{
 
 		stepTextView = (TextView)findViewById(R.id.step);
 		scoreTextView = (TextView)findViewById(R.id.score);
+		TypefaceSet();
 
 		game = new GameManager(MainActivity.this);
 
@@ -136,17 +141,32 @@ public class MainActivity extends Activity implements PrintInterface{
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
+	
+	private void TypefaceSet(){
+		mAndroidClockMonoThin = Typeface.createFromAsset(
+				getAssets(), "fonts/AndroidClockMono-Thin.ttf");
+		mAndroidClockMonoBold = Typeface.createFromAsset(
+				getAssets(), "fonts/AndroidClockMono-Bold.ttf");
+		mAndroidClockMonoLight = Typeface.createFromAsset(
+				getAssets(), "fonts/AndroidClockMono-Light.ttf");
+		mRobotoLabel= Typeface.create("sans-serif-condensed", Typeface.BOLD);
+		
+		stepTextView.setTypeface(mAndroidClockMonoThin);
+		scoreTextView.setTypeface(mAndroidClockMonoBold);
+	}
 
 	@Override
 	public void printSteps(int step) {
 		// TODO Auto-generated method stub
-		stepTextView.setText(String.valueOf(step));
+		//getString(R.string.step);
+		stepTextView.setText(getString(R.string.step)+step);
 	}
 
 	@Override
 	public void printScore(int score) {
 		// TODO Auto-generated method stub
-		scoreTextView.setText(String.valueOf(score));
+		//getString(R.string.score);
+		scoreTextView.setText(getString(R.string.score)+score);
 	}
 
 	@Override

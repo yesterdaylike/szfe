@@ -2,20 +2,40 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:background="@color/background"
     tools:context=".MainActivity" >
+
+    <Button
+        android:id="@+id/step"
+        android:layout_width="@dimen/button_width"
+        android:layout_height="@dimen/button_height"
+        android:layout_alignParentRight="true"
+        android:background="@android:color/transparent"
+        android:textColor="@android:color/white"
+        android:textSize="24sp" />
+
+    <Button
+        android:id="@+id/score"
+        android:layout_width="@dimen/button_width"
+        android:layout_height="@dimen/button_height"
+        android:layout_toLeftOf="@+id/step"
+        android:background="@android:color/transparent"
+        android:textColor="@android:color/white"
+        android:textSize="24sp" />
 
     <Button
         android:id="@+id/undo"
         android:layout_width="@dimen/button_width"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
+        android:layout_below="@id/score"
         android:onClick="onClickUndo"
-        android:text="undo" />
+        android:text="undo"
+        android:visibility="invisible" />
 
     <com.huige.tzfe.TableView
         android:id="@+id/table"
@@ -23,21 +43,6 @@
         android:layout_height="400dp"
         android:layout_below="@id/undo"
         android:layout_centerHorizontal="true" />
-
-    <TextView
-        android:id="@+id/step"
-        android:layout_width="@dimen/size"
-        android:layout_height="@dimen/size"
-        android:layout_below="@id/table"
-        android:padding="3dip" />
-
-    <TextView
-        android:id="@+id/score"
-        android:layout_width="@dimen/size"
-        android:layout_height="@dimen/size"
-        android:layout_below="@id/table"
-        android:layout_toRightOf="@+id/step"
-        android:padding="3dip" />
 
     <TextView
         android:id="@+id/message"
