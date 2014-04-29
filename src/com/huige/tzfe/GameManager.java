@@ -65,8 +65,8 @@ public class GameManager {
 		// Vectors representing tile movement
 		int[][] map = {
 				{ 0,					1,	0, 					1	}, // Up
-				{ 0,					1,	grid.width_size-1,	-1	}, // Right
-				{ grid.height_size-1 ,	-1, 0, 					1	},  // Down
+				{ 0,					1,	Grid.width_size-1,	-1	}, // Right
+				{ Grid.height_size-1 ,	-1, 0, 					1	},  // Down
 				{ 0, 					1,	0,					1	},  // Left
 		};
 
@@ -76,10 +76,10 @@ public class GameManager {
 	int[] getUndoParameter(int direction) {
 		// Vectors representing tile movement
 		int[][] map = {
-				{ grid.height_size-1 ,  -1,	0, 					1	}, // Up
+				{ Grid.height_size-1 ,  -1,	0, 					1	}, // Up
 				{ 0,					1,	0,					1	}, // Right
 				{ 0,					1,  0, 					1	},  // Down
-				{ 0, 					1,	grid.width_size-1,	-1	},  // Left
+				{ 0, 					1,	Grid.width_size-1,	-1	},  // Left
 		};
 
 		return map[direction];
@@ -88,8 +88,8 @@ public class GameManager {
 	// Save all tile positions and remove merger info
 	void prepareTiles() {
 		Tile tile;
-		for(int height = 0; height < grid.height_size; height++){
-			for(int width = 0; width < grid.width_size; width++){
+		for(int height = 0; height < Grid.height_size; height++){
+			for(int width = 0; width < Grid.width_size; width++){
 				tile = grid.cells[height][width];
 				tile.mergedFrom = null;
 				tile.saveValue();
@@ -99,12 +99,25 @@ public class GameManager {
 
 	// Set up the game
 	void setup() {
-		this.grid        = new Grid();
-		this.score       = 0;
-		this.step        = 0;
-		this.over        = false;
-		this.won         = false;
-		this.keepPlaying = false;
+		if( null != grid ){
+			Tile tile;
+			for(int height = 0; height < Grid.height_size; height++){
+				for(int width = 0; width < Grid.width_size; width++){
+					tile = grid.cells[height][width];
+					tile.mergedFrom = null;
+					tile.value = 0;
+					tile.previousValue = 0;
+				}
+			}
+		}else{
+			grid        = new Grid();
+		}
+		
+		score       = 0;
+		step        = 0;
+		over        = false;
+		won         = false;
+		keepPlaying = false;
 
 		// Add the initial tiles
 		Log.i(TAG, "setup");
@@ -175,8 +188,8 @@ public class GameManager {
 		ArrayList<Tile> formTiles = new ArrayList<Tile>();
 		ArrayList<Tile> toTiles = new ArrayList<Tile>();
 
-		for(int height = param[0]; grid.withinHeight(height); height+=param[1]){
-			for(int width = param[2]; grid.withinHeight(width); width+= param[3]){
+		for(int height = param[0]; Grid.withinHeight(height); height+=param[1]){
+			for(int width = param[2]; Grid.withinHeight(width); width+= param[3]){
 				tile = grid.cells[height][width];
 				Log.v(TAG, "height:"+height+",width:"+width);
 				if( 0 == tile.value ){
@@ -186,7 +199,7 @@ public class GameManager {
 				tempH = height + point.heigth;
 				tempW = width + point.width;
 
-				while(grid.withinBounds(tempH,tempW)){
+				while(Grid.withinBounds(tempH,tempW)){
 					other = grid.cells[tempH][tempW];
 					Log.i(TAG, "tempH:"+tempH+",tempW:"+tempW);
 					
@@ -253,8 +266,8 @@ public class GameManager {
 		Point point = getVector(direction);
 		int []param = getUndoParameter(direction);
 
-		for(int height = param[0]; grid.withinHeight(height); height+=param[1]){
-			for(int width = param[2]; grid.withinHeight(width); width+= param[3]){
+		for(int height = param[0]; Grid.withinHeight(height); height+=param[1]){
+			for(int width = param[2]; Grid.withinHeight(width); width+= param[3]){
 				tile = grid.cells[height][width];
 
 				if(tile.value == tile.previousValue ){
@@ -264,7 +277,7 @@ public class GameManager {
 				tempH = height + point.heigth;
 				tempW = width + point.width;
 
-				while(grid.withinBounds(tempH,tempW)){
+				while(Grid.withinBounds(tempH,tempW)){
 					other = grid.cells[tempH][tempW];
 
 					if( 0 == other.value ){
@@ -299,8 +312,8 @@ public class GameManager {
 	boolean tileMatchesAvailable() {
 		Tile tile, leftTile, topTile;
 
-		for(int height = 0; height < grid.height_size; height++){
-			for(int width = 0; width < grid.width_size; width++){
+		for(int height = 0; height < Grid.height_size; height++){
+			for(int width = 0; width < Grid.width_size; width++){
 				tile = grid.cells[height][width];
 
 				if( height >= 1 ){

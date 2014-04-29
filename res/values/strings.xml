@@ -3,6 +3,7 @@
 
     <string name="app_name">tzfe</string>
     <string name="action_settings">Settings</string>
+    <string name="action_restart">Restart</string>
     <string name="hello_world">Hello world!</string>
     <string name="step">步数：</string>
     <string name="score">得分：</string>

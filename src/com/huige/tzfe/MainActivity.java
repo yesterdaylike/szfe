@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
@@ -24,9 +25,8 @@ public class MainActivity extends Activity implements PrintInterface{
 	TextView stepTextView;
 	TextView scoreTextView;
 	private TableView tableLayout;
-	
-	private Typeface mAndroidClockMonoThin, mAndroidClockMonoBold, mAndroidClockMonoLight    ;
-	private Typeface mRobotoLabel;
+
+	private Typeface mAndroidClockMonoThin, mAndroidClockMonoBold;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +54,6 @@ public class MainActivity extends Activity implements PrintInterface{
 		};
 
 		tableLayout.setOnTouchListener(gestureListener);
-		//print();
 	}
 
 	class MyGestureDetector extends SimpleOnGestureListener {
@@ -141,16 +140,16 @@ public class MainActivity extends Activity implements PrintInterface{
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-	
+
 	private void TypefaceSet(){
 		mAndroidClockMonoThin = Typeface.createFromAsset(
 				getAssets(), "fonts/AndroidClockMono-Thin.ttf");
 		mAndroidClockMonoBold = Typeface.createFromAsset(
 				getAssets(), "fonts/AndroidClockMono-Bold.ttf");
-		mAndroidClockMonoLight = Typeface.createFromAsset(
+		/*mAndroidClockMonoLight = Typeface.createFromAsset(
 				getAssets(), "fonts/AndroidClockMono-Light.ttf");
-		mRobotoLabel= Typeface.create("sans-serif-condensed", Typeface.BOLD);
-		
+		mRobotoLabel= Typeface.create("sans-serif-condensed", Typeface.BOLD);*/
+
 		stepTextView.setTypeface(mAndroidClockMonoThin);
 		scoreTextView.setTypeface(mAndroidClockMonoBold);
 	}
@@ -200,5 +199,21 @@ public class MainActivity extends Activity implements PrintInterface{
 			messageTextView.append(sb.toString());
 		}
 		tableLayout.addRandomTile(newTile);
+	}
+
+	@Override
+	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+		// TODO Auto-generated method stub
+		switch (item.getItemId()) {
+		case R.id.action_settings:
+			setTitle("action_settings");
+			break;
+		case R.id.action_restart:
+			setTitle("action_restart");
+			game.restart();
+			tableLayout.invalidate();
+			break;
+		}
+		return true;
 	}
 }
