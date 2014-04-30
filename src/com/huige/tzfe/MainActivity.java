@@ -20,9 +20,9 @@ public class MainActivity extends Activity implements PrintInterface{
 
 	private String TAG = "tzfe";
 	private GestureDetector gestureDetector;
-	View.OnTouchListener gestureListener;
-	TextView stepTextView;
-	TextView scoreTextView;
+	private View.OnTouchListener gestureListener;
+	private TextView stepTextView;
+	private TextView scoreTextView;
 	private TableView tableLayout;
 
 	private Typeface mAndroidClockMonoThin, mAndroidClockMonoBold;
@@ -52,7 +52,7 @@ public class MainActivity extends Activity implements PrintInterface{
 			game = new GameManager(MainActivity.this);
 		}
 		else{
-			tableLayout.invalidate();
+			game.setPrintInterface(MainActivity.this);
 		}
 		tableLayout.setDraw(game.grid.cells);
 	}

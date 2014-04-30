@@ -6,7 +6,6 @@ import android.util.Log;
 
 public class GameManager {
 	Grid grid = null;
-	//int size;
 	int startTiles;
 	int score;
 	int step;
@@ -25,6 +24,9 @@ public class GameManager {
 		startTiles  = 2;
 		Log.i(TAG, "GameManager startTiles:"+startTiles);
 		setup();
+	}
+	void setPrintInterface(PrintInterface mPI){
+		mPrintInterface = mPI;
 	}
 
 	// Restart the game
