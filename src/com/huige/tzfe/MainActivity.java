@@ -1,6 +1,7 @@
 package com.huige.tzfe;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
@@ -49,7 +50,7 @@ public class MainActivity extends Activity implements PrintInterface{
 
 		game = (GameManager)getLastNonConfigurationInstance();
 		if( null == game ){  
-			game = new GameManager(MainActivity.this);
+			game = new GameManager(this,this);
 		}
 		else{
 			game.setPrintInterface(MainActivity.this);
@@ -173,7 +174,6 @@ public class MainActivity extends Activity implements PrintInterface{
 	@Override
 	public void addRandomTile(Tile newTile) {
 		// TODO Auto-generated method stub
-		Log.e(TAG, "Activity addRandomTile=====================");
 		StringBuffer sb = new StringBuffer("\n");
 		if( null != game){
 			Tile[][] cells = game.grid.cells;
@@ -205,7 +205,18 @@ public class MainActivity extends Activity implements PrintInterface{
 			game.restart();
 			tableLayout.invalidate();
 			break;
+		case R.id.action_history:
+			Intent intent = new Intent(this, HistoryActivity.class);
+			startActivity(intent);
+			break;
 		}
 		return true;
+	}
+
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		game.saveHistory();
+		super.onDestroy();
 	}
 }

@@ -41,7 +41,6 @@
         android:id="@+id/table"
         android:layout_width="400dp"
         android:layout_height="400dp"
-        android:layout_below="@id/undo"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerInParent="true" />
 
 </RelativeLayout>

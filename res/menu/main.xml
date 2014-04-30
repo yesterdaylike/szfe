@@ -6,6 +6,11 @@
         android:showAsAction="always"
         android:title="@string/action_restart"/>
     <item
+        android:id="@+id/action_history"
+        android:orderInCategory="100"
+        android:showAsAction="always"
+        android:title="@string/action_history"/>
+    <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:showAsAction="never"

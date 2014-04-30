@@ -1,7 +1,9 @@
 package com.huige.tzfe;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
+import android.content.Context;
 import android.util.Log;
 
 public class GameManager {
@@ -9,21 +11,25 @@ public class GameManager {
 	int startTiles;
 	int score;
 	int step;
+	int maxNumber;
 	boolean over;
 	boolean won;
-	boolean keepPlaying;
+	boolean keepPlaying = true;
 	String TAG = "tzfe";
 
 	boolean undo = false;
 	Tile random = null;
 	private PrintInterface mPrintInterface; 
 	
-	GameManager(PrintInterface mPI) {
+	private HistoryDB historyDB;
+	private Context context;
+	
+	GameManager(PrintInterface mPI, Context context) {
 		mPrintInterface = mPI;
 		//this.size = size; // Size of the grid
 		startTiles  = 2;
-		Log.i(TAG, "GameManager startTiles:"+startTiles);
 		setup();
+		this.context = context;
 	}
 	void setPrintInterface(PrintInterface mPI){
 		mPrintInterface = mPI;
@@ -33,9 +39,23 @@ public class GameManager {
 	void restart() {
 		//clearGameState();
 		//actuator.continueGame(); // Clear the game won/lost message
+		saveHistory();
 		setup();
 	};
-
+	
+	public void saveHistory(){
+		Log.e("zhengwenhui", "save history");
+		if( null == historyDB ){
+			historyDB = new HistoryDB(context);
+		}
+		
+		Calendar calendar = Calendar.getInstance();
+		int day = calendar.get(Calendar.DAY_OF_MONTH);
+		int mouth = calendar.get(Calendar.MONTH);
+		long timeIiMillis = calendar.getTimeInMillis();
+		
+		historyDB.add();
+	}
 
 	// Keep playing after winning (allows going over 2048)
 	void keepPlaying() {
@@ -102,6 +122,7 @@ public class GameManager {
 	// Set up the game
 	void setup() {
 		if( null != grid ){
+			//restart
 			Tile tile;
 			for(int height = 0; height < Grid.height_size; height++){
 				for(int width = 0; width < Grid.width_size; width++){
@@ -117,6 +138,7 @@ public class GameManager {
 		
 		score       = 0;
 		step        = 0;
+		maxNumber = 2;
 		over        = false;
 		won         = false;
 		keepPlaying = false;
@@ -218,7 +240,6 @@ public class GameManager {
 						tempW += point.width;
 					}
 					else if( tile.value == other.value && null == other.mergedFrom ){
-						Log.i(TAG, "tile.value == other.value && null == other.mergedFrom");
 						moveTile(tile, other);
 						
 						formTiles.add(tile);
@@ -242,12 +263,12 @@ public class GameManager {
 		if (moved) {
 			Log.i(TAG, "moved");
 			addRandomTile();
-			Log.i(TAG, "mPrintInterface.moveViewsSetp(formTiles.toArray(), toTiles.toArray(), direction)");
 			mPrintInterface.moveViewsSetp(formTiles.toArray(), toTiles.toArray(), direction);
 			mPrintInterface.printSteps(++step);
 			if (!movesAvailable()) {
 				Log.i(TAG, "over");
 				this.over = true; // Game over!
+				saveHistory();
 			}
 			else{
 				Log.i(TAG, "undo");
