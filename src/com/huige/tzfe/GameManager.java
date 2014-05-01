@@ -44,17 +44,21 @@ public class GameManager {
 	};
 	
 	public void saveHistory(){
-		Log.e("zhengwenhui", "save history");
 		if( null == historyDB ){
 			historyDB = new HistoryDB(context);
 		}
-		
 		Calendar calendar = Calendar.getInstance();
 		int day = calendar.get(Calendar.DAY_OF_MONTH);
-		int mouth = calendar.get(Calendar.MONTH);
+		int month = calendar.get(Calendar.MONTH);
 		long timeIiMillis = calendar.getTimeInMillis();
-		
-		historyDB.add();
+		Log.e("zhengwenhui", "SAVE HISTORY month:"+month+", day:"+day+", timeIiMillis:"+timeIiMillis+", step:"+step+", score:"+score+", maxNumber:"+maxNumber);
+		historyDB.add(month, day, timeIiMillis, step, score, maxNumber);
+	}
+	
+	public void closeHistoryDB(){
+		if( null != historyDB ){
+			historyDB.close();
+		}
 	}
 
 	// Keep playing after winning (allows going over 2048)
@@ -247,6 +251,9 @@ public class GameManager {
 						
 						moved = true;
 						other.mergedFrom = new Point(tile.heigth, tile.width);
+						if( maxNumber < other.value ){
+							maxNumber = other.value;
+						}
 						score += other.value;
 						mPrintInterface.printScore(score);
 						if (other.value == 2048) won = true;

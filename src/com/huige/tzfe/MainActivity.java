@@ -217,6 +217,7 @@ public class MainActivity extends Activity implements PrintInterface{
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		game.saveHistory();
+		game.closeHistoryDB();
 		super.onDestroy();
 	}
 }

@@ -7,6 +7,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="step">步数：</string>
     <string name="score">得分：</string>
+    <string name="max_number">最大数字：</string>
     <string name="action_history">记录</string>
 
 </resources>

@@ -1,6 +1,7 @@
 package com.huige.tzfe;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -15,6 +16,13 @@ public class HistoryDB extends SQLiteOpenHelper {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);  
 	}
 
+	static String month = "month";
+	static String day = "day";
+	static String date = "date";
+	static String step = "step";
+	static String score = "score";
+	static String maxnumber = "maxnumber";
+
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		// TODO Auto-generated method stub
@@ -22,14 +30,21 @@ public class HistoryDB extends SQLiteOpenHelper {
 				"(_id INTEGER PRIMARY KEY AUTOINCREMENT, month TEXT, day TEXT, date TEXT, step TEXT, score TEXT, maxnumber TEXT)");  
 	}
 
-	public void add(){
-		db = getWritableDatabase();
-		//db.execSQL("INSERT INTO history VALUES(null, ?, ?, ?, ?, ?, ?)", new Object[]{person.name, person.age, person.info}); 
-		db.close();
+	public void add(int month, int day, long date, int step, int score, int maxnumber){
+		if( db == null ){
+			db = getWritableDatabase();
+		}
+		db.execSQL("INSERT INTO history VALUES(null, ?, ?, ?, ?, ?, ?)", new Object[]{month, day, date, step, score, maxnumber}); 
+		//db.close();
 	}
-	
-	public void query(){
-		
+
+	public Cursor query(){
+		if( db == null ){
+			db = getWritableDatabase();
+		}
+		Cursor cursor = db.query("history", null, null, null, null, null, null); 
+		//db.close();
+		return cursor;
 	}
 
 	@Override
