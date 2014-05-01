@@ -116,6 +116,7 @@ public class HistoryActivity extends Activity {
 			map.put("day", dayStr);
 			//map.put("img", R.drawable.point);
 			map.put("score", builder.toString());
+			list.add(0, map);
 		}
 
 		return list;
