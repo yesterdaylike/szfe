@@ -9,5 +9,7 @@
     <string name="score">得分：</string>
     <string name="max_number">最大数字：</string>
     <string name="action_history">记录</string>
+    <string name="no_history">还没有历史记录</string>
+    <string name="today">今天</string>
 
 </resources>

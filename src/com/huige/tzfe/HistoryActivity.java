@@ -24,22 +24,31 @@ public class HistoryActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_history);
-		ListView historyListview = (ListView)findViewById(R.id.history_listview);
-
-		score = getString(R.string.score);
-		step = getString(R.string.step);
-		maxNumber = getString(R.string.max_number);
+		setTitle(getString(R.string.action_history));
+		
 
 		if( null == historyDB ){
 			historyDB = new HistoryDB(this);
 		}
 		Cursor cursor = historyDB.query();
+		
+		if( null != cursor && cursor.getCount() > 0){
+			setContentView(R.layout.activity_history);
+			ListView historyListview = (ListView)findViewById(R.id.history_listview);
 
-		SimpleAdapter adapter = new SimpleAdapter(this,getData(cursor),R.layout.history_item,
-				new String[]{"date","day","score"},
-				new int[]{R.id.month, R.id.day,R.id.score});
-		historyListview.setAdapter(adapter);
+			score = getString(R.string.score);
+			step = getString(R.string.step);
+			maxNumber = getString(R.string.max_number);
+			
+			SimpleAdapter adapter = new SimpleAdapter(this,getData(cursor),R.layout.history_item,
+					new String[]{"date","day","score"},
+					new int[]{R.id.month, R.id.day,R.id.score});
+			historyListview.setAdapter(adapter);
+		}
+		else {
+			setContentView(R.layout.no_history);
+		}
+
 	}
 	@Override
 	protected void onDestroy() {
