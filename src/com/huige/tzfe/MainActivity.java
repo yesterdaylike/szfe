@@ -1,7 +1,9 @@
 package com.huige.tzfe;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,8 +27,15 @@ public class MainActivity extends Activity implements PrintInterface{
 	private TextView stepTextView;
 	private TextView scoreTextView;
 	private TableView tableLayout;
+	private View clingView;
 
 	private Typeface mAndroidClockMonoThin, mAndroidClockMonoBold;
+
+	static String FIRST_RUN_CLING_DISMISSED_KEY = "FIRST_RUN_CLING_DISMISSED_KEY";
+	private SharedPreferences mSharedPrefs;
+	boolean openCling = false;
+	int clingStep = 0;
+	int clingCount = 0;
 
 	@SuppressWarnings("deprecation")
 	@Override
@@ -35,6 +44,8 @@ public class MainActivity extends Activity implements PrintInterface{
 		setContentView(R.layout.activity_main);
 
 		tableLayout = (TableView)findViewById(R.id.table);
+		cling();
+
 		stepTextView = (TextView)findViewById(R.id.step);
 		scoreTextView = (TextView)findViewById(R.id.score);
 		TypefaceSet();                                     
@@ -56,6 +67,19 @@ public class MainActivity extends Activity implements PrintInterface{
 			game.setPrintInterface(MainActivity.this);
 		}
 		tableLayout.setDraw(game.grid.cells);
+	}
+	
+	private void cling(){
+		mSharedPrefs = getSharedPreferences(FIRST_RUN_CLING_DISMISSED_KEY,
+                Context.MODE_PRIVATE);
+		openCling = mSharedPrefs.getBoolean(FIRST_RUN_CLING_DISMISSED_KEY, true);
+		if(openCling){
+			clingView = findViewById(R.id.cling);
+			clingView.setVisibility(View.VISIBLE);
+			SharedPreferences.Editor editor = mSharedPrefs.edit();
+			editor.putBoolean(FIRST_RUN_CLING_DISMISSED_KEY,false);
+			editor.commit();
+		}
 	}
 
 	@Override
@@ -174,10 +198,11 @@ public class MainActivity extends Activity implements PrintInterface{
 	@Override
 	public void addRandomTile(Tile newTile) {
 		// TODO Auto-generated method stub
+		int cling2 = 0;
+
 		StringBuffer sb = new StringBuffer("\n");
 		if( null != game){
 			Tile[][] cells = game.grid.cells;
-
 			for (int h = 0; h < 4; h++) {
 				for (int w = 0; w < 4; w++) {
 					sb.append(String.format(" %2d ", cells[h][w].previousValue));
@@ -185,11 +210,48 @@ public class MainActivity extends Activity implements PrintInterface{
 				sb.append("  >>>>  ");
 				for (int w = 0; w < 4; w++) {
 					sb.append(String.format(" %2d ", cells[h][w].value));
+
+					if(openCling){
+						if(clingStep == 1 && cells[h][w].value == 4){
+							cling2 = 4;
+						}
+					}
 				}
 				sb.append("\n");
+				Log.e(TAG, "sb.toString(): "+sb.toString());
 			}
-			Log.e(TAG, "sb.toString(): "+sb.toString());
 		}
+		
+		if(openCling){
+			if( clingStep == 0){
+				clingCount++;
+				clingView.setBackgroundResource(R.drawable.cling1);
+				if(clingCount == 2){
+					clingStep = 1;
+				}
+			}
+			else if( clingStep == 1){
+				if(cling2 == 4){
+					clingView.setBackgroundResource(R.drawable.cling2);
+					clingStep = 2;
+				}
+				else{
+					clingView.setBackgroundResource(0);
+					clingStep = 1;
+				}
+			}
+			else if( clingStep == 2){
+				clingView.setBackgroundResource(R.drawable.cling3);
+				clingStep = 3;
+			}
+			else if( clingStep == 3){
+				clingView.setVisibility(View.GONE);
+				clingStep = 0;
+				openCling = false;
+			}
+			tableLayout.invalidate();
+		}
+
 		tableLayout.addRandomTile(newTile);
 	}
 

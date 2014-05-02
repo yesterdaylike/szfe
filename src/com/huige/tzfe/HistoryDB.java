@@ -34,8 +34,11 @@ public class HistoryDB extends SQLiteOpenHelper {
 		if( db == null ){
 			db = getWritableDatabase();
 		}
-		db.execSQL("INSERT INTO history VALUES(null, ?, ?, ?, ?, ?, ?)", new Object[]{month, day, date, step, score, maxnumber}); 
-		//db.close();
+		try {
+			db.execSQL("INSERT INTO history VALUES(null, ?, ?, ?, ?, ?, ?)", new Object[]{month, day, date, step, score, maxnumber});
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 	}
 
 	public Cursor query(){

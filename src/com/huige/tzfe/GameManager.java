@@ -14,7 +14,7 @@ public class GameManager {
 	int maxNumber;
 	boolean over;
 	boolean won;
-	boolean keepPlaying = true;
+	boolean keepPlaying;
 	String TAG = "tzfe";
 
 	boolean undo = false;
@@ -39,7 +39,9 @@ public class GameManager {
 	void restart() {
 		//clearGameState();
 		//actuator.continueGame(); // Clear the game won/lost message
-		saveHistory();
+		if( !over ){
+			saveHistory();
+		}
 		setup();
 	};
 	
@@ -62,8 +64,8 @@ public class GameManager {
 	}
 
 	// Keep playing after winning (allows going over 2048)
-	void keepPlaying() {
-		this.keepPlaying = true;
+	void keepPlaying(boolean kp) {
+		this.keepPlaying = kp;
 		//this.actuator.continueGame(); // Clear the game won/lost message
 	};
 
@@ -145,7 +147,7 @@ public class GameManager {
 		maxNumber = 2;
 		over        = false;
 		won         = false;
-		keepPlaying = false;
+		keepPlaying = true;
 
 		// Add the initial tiles
 		Log.i(TAG, "setup");
@@ -256,7 +258,9 @@ public class GameManager {
 						}
 						score += other.value;
 						mPrintInterface.printScore(score);
-						if (other.value == 2048) won = true;
+						if (maxNumber == 1024){
+							won = true;
+						}
 						break;
 					}
 					else{
