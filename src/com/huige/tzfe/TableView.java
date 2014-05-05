@@ -14,10 +14,10 @@ public class TableView extends TextView {
 	private String TAG = "TableView";
 	private Tile[][] tiles;
 
-	private Paint paint;			//·½¿é»­±Ê
-	private RectF cellRect;			//Ð¡·½¿éµÄ¾ØÐÎ·¶Î§
+	private Paint paint;			//ï¿½ï¿½ï¿½é»­ï¿½ï¿½
+	private RectF cellRect;			//Ð¡ï¿½ï¿½ï¿½ï¿½ï¿½Ä¾ï¿½ï¿½Î·ï¿½Î§
 
-	private int value;				//intÐÍ
+	private int value;				//intï¿½ï¿½
 
 	private Tile[] fromTiles;				
 	private Tile[] toTiles;	
@@ -68,14 +68,14 @@ public class TableView extends TextView {
 	}
 
 	private void initPositionlist(){
-		int height = getHeight();	//view×ÜµÄ¸ß¶È
-		int width = getWidth(); 	//view×ÜµÄ¿í¶È
+		int height = getHeight();	//viewï¿½ÜµÄ¸ß¶ï¿½
+		int width = getWidth(); 	//viewï¿½ÜµÄ¿ï¿½ï¿½ï¿½
 
-		int cellHeight = height >> 2;//Ð¡·½¿éµÄ¸ß¶È
-		int cellWidth = width >> 2;  //Ð¡·½¿éµÄ¿í¶È
+		int cellHeight = height >> 2;//Ð¡ï¿½ï¿½ï¿½ï¿½ï¿½Ä¸ß¶ï¿½
+		int cellWidth = width >> 2;  //Ð¡ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½
 
-		stepIntervalH = cellHeight >> 3;//Ð¡·½¿éµÄ¸ß¶È
-		stepIntervalW = cellWidth >> 3;  //Ð¡·½¿éµÄ¿í¶È
+		stepIntervalH = cellHeight >> 3;//Ð¡ï¿½ï¿½ï¿½ï¿½ï¿½Ä¸ß¶ï¿½
+		stepIntervalW = cellWidth >> 3;  //Ð¡ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½
 
 		//float halfHeightText = paintText.getTextSize() /2 ;
 
@@ -85,13 +85,9 @@ public class TableView extends TextView {
 		//positionsHText = new float[5];
 		//positionsWText = new float[5];
 
-		for(int h = 0; h < 5; h++){
-			positionsH[h] = cellHeight * h;
-			//positionsHText[h] = positionsH[h] + ( cellHeight >> 1 ) + halfHeightText;
-			for(int w = 0; w < 5; w++){
-				positionsW[w] = cellWidth * w;
-				//positionsWText[w] = positionsW[w] + ( cellWidth >> 1 );
-			}
+		for(int i = 0; i < 5; i++){
+			positionsH[i] = cellHeight * i;
+			positionsW[i] = cellWidth * i;
 		}
 
 		//rect = new Rect(0, 0, width, height);
