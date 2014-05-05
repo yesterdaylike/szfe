@@ -1,7 +1,12 @@
 package com.huige.tzfe;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
@@ -13,6 +18,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 public class MainActivity extends Activity implements PrintInterface{
@@ -28,6 +35,7 @@ public class MainActivity extends Activity implements PrintInterface{
 	private TextView scoreTextView;
 	private TableView tableLayout;
 	private View clingView;
+	private View snowFallView;
 
 	private Typeface mAndroidClockMonoThin, mAndroidClockMonoBold;
 
@@ -48,6 +56,7 @@ public class MainActivity extends Activity implements PrintInterface{
 
 		stepTextView = (TextView)findViewById(R.id.step);
 		scoreTextView = (TextView)findViewById(R.id.score);
+		snowFallView = (SnowFallView)findViewById(R.id.snow);
 		TypefaceSet();                                     
 		// Gesture detection
 		gestureDetector = new GestureDetector(this, new MyGestureDetector());
@@ -68,10 +77,10 @@ public class MainActivity extends Activity implements PrintInterface{
 		}
 		tableLayout.setDraw(game.grid.cells);
 	}
-	
+
 	private void cling(){
 		mSharedPrefs = getSharedPreferences(FIRST_RUN_CLING_DISMISSED_KEY,
-                Context.MODE_PRIVATE);
+				Context.MODE_PRIVATE);
 		openCling = mSharedPrefs.getBoolean(FIRST_RUN_CLING_DISMISSED_KEY, true);
 		if(openCling){
 			clingView = findViewById(R.id.cling);
@@ -221,7 +230,7 @@ public class MainActivity extends Activity implements PrintInterface{
 				Log.e(TAG, "sb.toString(): "+sb.toString());
 			}
 		}
-		
+
 		if(openCling){
 			if( clingStep == 0){
 				clingCount++;
@@ -255,13 +264,14 @@ public class MainActivity extends Activity implements PrintInterface{
 		tableLayout.addRandomTile(newTile);
 	}
 
+	@SuppressLint("NewApi")
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
 		// TODO Auto-generated method stub
 		switch (item.getItemId()) {
-		case R.id.action_settings:
+		/*case R.id.action_settings:
 			setTitle("action_settings");
-			break;
+			break;*/
 		case R.id.action_restart:
 			setTitle("action_restart");
 			game.restart();
@@ -272,6 +282,29 @@ public class MainActivity extends Activity implements PrintInterface{
 			startActivity(intent);
 			break;
 		}
+		StringBuilder strBuilder = new StringBuilder();
+		strBuilder.append(getString(R.string.score));
+		strBuilder.append(game.score);
+		strBuilder.append("， ");
+
+		strBuilder.append(getString(R.string.step));
+		strBuilder.append(game.step);
+
+		snowFallView.setVisibility(View.VISIBLE);
+
+		Dialog dialog = new Dialog(this, R.style.Theme_dialog);
+		dialog.setContentView(R.layout.layout_dialog);
+		dialog.show();
+		TextView mMessage = (TextView) dialog.findViewById(R.id.message);
+		mMessage.setText(strBuilder.toString());
+		dialog.setOnDismissListener(new OnDismissListener() {
+
+			@Override
+			public void onDismiss(DialogInterface dialog) {
+				// TODO Auto-generated method stub
+				snowFallView.setVisibility(View.INVISIBLE);
+			}
+		});
 		return true;
 	}
 
@@ -281,5 +314,22 @@ public class MainActivity extends Activity implements PrintInterface{
 		game.saveHistory();
 		game.closeHistoryDB();
 		super.onDestroy();
+	}
+
+	@Override
+	public void gameResult(int flag) {
+		// TODO Auto-generated method stub
+		String message = "";
+		switch (flag) {
+		case PrintInterface.GAME_OVER:
+			message = "游戏结束";
+			break;
+		case PrintInterface.GAME_SUCCESS:
+			message = "游戏成功";
+			break;
+
+		default:
+			break;
+		}
 	}
 }

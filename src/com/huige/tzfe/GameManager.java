@@ -259,7 +259,8 @@ public class GameManager {
 						score += other.value;
 						mPrintInterface.printScore(score);
 						if (maxNumber == 1024){
-							won = true;
+							won = true; //游戏成功
+							mPrintInterface.gameResult(PrintInterface.GAME_SUCCESS);
 						}
 						break;
 					}
@@ -278,8 +279,9 @@ public class GameManager {
 			mPrintInterface.printSteps(++step);
 			if (!movesAvailable()) {
 				Log.i(TAG, "over");
-				this.over = true; // Game over!
+				this.over = true; // 游戏结束!
 				saveHistory();
+				mPrintInterface.gameResult(PrintInterface.GAME_OVER);
 			}
 			else{
 				Log.i(TAG, "undo");
