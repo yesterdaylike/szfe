@@ -35,7 +35,7 @@ public class SnowFallView extends View {
 		};
 
 		for (int i = 0; i < snowFlakeIds.length; i++) {
-			Drawable snowFlake = context.getResources().getDrawable(snowFlakeIds[i++]);
+			Drawable snowFlake = context.getResources().getDrawable(snowFlakeIds[i]);
 			snowFlake.setBounds(0, 0, snowFlake.getIntrinsicWidth(), snowFlake
 					.getIntrinsicHeight());
 			snowFlakes[i] = snowFlake;

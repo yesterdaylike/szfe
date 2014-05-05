@@ -282,29 +282,6 @@ public class MainActivity extends Activity implements PrintInterface{
 			startActivity(intent);
 			break;
 		}
-		StringBuilder strBuilder = new StringBuilder();
-		strBuilder.append(getString(R.string.score));
-		strBuilder.append(game.score);
-		strBuilder.append("， ");
-
-		strBuilder.append(getString(R.string.step));
-		strBuilder.append(game.step);
-
-		snowFallView.setVisibility(View.VISIBLE);
-
-		Dialog dialog = new Dialog(this, R.style.Theme_dialog);
-		dialog.setContentView(R.layout.layout_dialog);
-		dialog.show();
-		TextView mMessage = (TextView) dialog.findViewById(R.id.message);
-		mMessage.setText(strBuilder.toString());
-		dialog.setOnDismissListener(new OnDismissListener() {
-
-			@Override
-			public void onDismiss(DialogInterface dialog) {
-				// TODO Auto-generated method stub
-				snowFallView.setVisibility(View.INVISIBLE);
-			}
-		});
 		return true;
 	}
 
@@ -322,14 +299,38 @@ public class MainActivity extends Activity implements PrintInterface{
 		String message = "";
 		switch (flag) {
 		case PrintInterface.GAME_OVER:
-			message = "游戏结束";
+			message = "游戏结束\n";
 			break;
 		case PrintInterface.GAME_SUCCESS:
-			message = "游戏成功";
+			message = "游戏成功\n";
 			break;
 
 		default:
 			break;
 		}
+
+		StringBuilder strBuilder = new StringBuilder();
+		strBuilder.append(getString(R.string.score));
+		strBuilder.append(game.score);
+		strBuilder.append("， ");
+
+		strBuilder.append(getString(R.string.step));
+		strBuilder.append(game.step);
+
+		snowFallView.setVisibility(View.VISIBLE);
+
+		Dialog dialog = new Dialog(this, R.style.Theme_dialog);
+		dialog.setContentView(R.layout.layout_dialog);
+		dialog.show();
+		TextView mMessage = (TextView) dialog.findViewById(R.id.message);
+		mMessage.setText(message+strBuilder.toString());
+		dialog.setOnDismissListener(new OnDismissListener() {
+
+			@Override
+			public void onDismiss(DialogInterface dialog) {
+				// TODO Auto-generated method stub
+				snowFallView.setVisibility(View.INVISIBLE);
+			}
+		});
 	}
 }
