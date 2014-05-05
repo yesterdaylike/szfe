@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import android.content.Context;
-import android.util.Log;
 
 public class GameManager {
 	Grid grid = null;
@@ -53,7 +52,7 @@ public class GameManager {
 		int day = calendar.get(Calendar.DAY_OF_MONTH);
 		int month = calendar.get(Calendar.MONTH);
 		long timeIiMillis = calendar.getTimeInMillis();
-		Log.e("zhengwenhui", "SAVE HISTORY month:"+month+", day:"+day+", timeIiMillis:"+timeIiMillis+", step:"+step+", score:"+score+", maxNumber:"+maxNumber);
+		//Log.e("zhengwenhui", "SAVE HISTORY month:"+month+", day:"+day+", timeIiMillis:"+timeIiMillis+", step:"+step+", score:"+score+", maxNumber:"+maxNumber);
 		historyDB.add(month, day, timeIiMillis, step, score, maxNumber);
 	}
 	
@@ -150,7 +149,7 @@ public class GameManager {
 		keepPlaying = true;
 
 		// Add the initial tiles
-		Log.i(TAG, "setup");
+		//Log.i(TAG, "setup");
 		mPrintInterface.printScore(score);
 		mPrintInterface.printSteps(step);
 		addStartTiles();
@@ -161,7 +160,7 @@ public class GameManager {
 
 	// Adds a tile in a random position
 	void addRandomTile() {
-		Log.i(TAG, "addRandomTile");
+		//Log.i(TAG, "addRandomTile");
 
 		random = grid.randomAvailableCell();
 
@@ -169,13 +168,13 @@ public class GameManager {
 			//int value = Math.random() < 0.9 ? 2 : 4;
 			random.value = 2;
 			mPrintInterface.addRandomTile(random);
-			Log.e(TAG, "addRandomTile tile.value:"+random.value);
+			//Log.e(TAG, "addRandomTile tile.value:"+random.value);
 		}
 	}
 
 	// Set up the initial tiles to start the game with
 	void addStartTiles() {
-		Log.i(TAG, "addStartTiles");
+		//Log.i(TAG, "addStartTiles");
 		for (int i = 0; i < startTiles; i++) {
 			addRandomTile();
 		}
@@ -213,7 +212,7 @@ public class GameManager {
 		int []param = getParameter(direction);
 		boolean moved = false;
 		
-		Log.e(TAG, "Move direction:"+direction);
+		//Log.e(TAG, "Move direction:"+direction);
 		
 		ArrayList<Tile> formTiles = new ArrayList<Tile>();
 		ArrayList<Tile> toTiles = new ArrayList<Tile>();
@@ -221,7 +220,7 @@ public class GameManager {
 		for(int height = param[0]; Grid.withinHeight(height); height+=param[1]){
 			for(int width = param[2]; Grid.withinHeight(width); width+= param[3]){
 				tile = grid.cells[height][width];
-				Log.v(TAG, "height:"+height+",width:"+width);
+				//Log.v(TAG, "height:"+height+",width:"+width);
 				if( 0 == tile.value ){
 					continue;
 				}
@@ -231,10 +230,10 @@ public class GameManager {
 
 				while(Grid.withinBounds(tempH,tempW)){
 					other = grid.cells[tempH][tempW];
-					Log.i(TAG, "tempH:"+tempH+",tempW:"+tempW);
+					//Log.i(TAG, "tempH:"+tempH+",tempW:"+tempW);
 					
 					if( 0 == other.value ){
-						Log.i(TAG, "0 == other.value");
+						//Log.i(TAG, "0 == other.value");
 						moveTile(tile, other);
 						
 						formTiles.add(tile);
@@ -265,7 +264,7 @@ public class GameManager {
 						break;
 					}
 					else{
-						Log.i(TAG, "other");
+						//Log.i(TAG, "other");
 						break;
 					}
 				}
@@ -273,18 +272,18 @@ public class GameManager {
 		}
 
 		if (moved) {
-			Log.i(TAG, "moved");
+			//Log.i(TAG, "moved");
 			addRandomTile();
 			mPrintInterface.moveViewsSetp(formTiles.toArray(), toTiles.toArray(), direction);
 			mPrintInterface.printSteps(++step);
 			if (!movesAvailable()) {
-				Log.i(TAG, "over");
+				//Log.i(TAG, "over");
 				this.over = true; // ”Œœ∑Ω· ¯!
 				saveHistory();
 				mPrintInterface.gameResult(PrintInterface.GAME_OVER);
 			}
 			else{
-				Log.i(TAG, "undo");
+				//Log.i(TAG, "undo");
 				undo = true;
 			}
 		}

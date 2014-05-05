@@ -2,9 +2,6 @@ package com.huige.tzfe;
 
 import java.util.ArrayList;
 import java.util.Random;
-
-import android.util.Log;
-
 import com.huige.tzfe.GameManager.Point;
 
 public class Grid {
@@ -36,13 +33,10 @@ public class Grid {
 
 	// Find the first available random position
 	Tile randomAvailableCell() {
-		Log.i(TAG, "randomAvailableCell");
 		ArrayList<Tile> availableCells = availableCells();
-		Log.v(TAG, "randomAvailableCell size:"+ availableCells.size());
 		if ( availableCells.size() > 0) {
 			Random random = new Random();
 			int randomInt = random.nextInt(availableCells.size());
-			Log.i(TAG, "randomInt:"+ randomInt);
 			return availableCells.get(randomInt);
 		}
 		return null;
@@ -59,7 +53,6 @@ public class Grid {
 
 	int cellsAvailable() {
 		int size = availableCells().size();
-		Log.i(TAG, "cellsAvailable:"+size);
 		return size;
 	}
 

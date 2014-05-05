@@ -2,7 +2,6 @@ package com.huige.tzfe;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,15 +10,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.TextView;
 
 public class MainActivity extends Activity implements PrintInterface{
@@ -28,7 +24,6 @@ public class MainActivity extends Activity implements PrintInterface{
 
 	private GameManager game;
 
-	private String TAG = "tzfe";
 	private GestureDetector gestureDetector;
 	private View.OnTouchListener gestureListener;
 	private TextView stepTextView;
@@ -99,9 +94,9 @@ public class MainActivity extends Activity implements PrintInterface{
 	class MyGestureDetector extends SimpleOnGestureListener {
 		@Override
 		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-			Log.i(TAG, "onFling v  x:"+velocityX+",y:"+velocityY);
-			Log.i(TAG, "e1 x:"+e1.getX()+",y:"+e1.getY());
-			Log.i(TAG, "e2 x:"+e2.getX()+",y:"+e2.getY());
+			//Log.i(TAG, "onFling v  x:"+velocityX+",y:"+velocityY);
+			//Log.i(TAG, "e1 x:"+e1.getX()+",y:"+e1.getY());
+			//Log.i(TAG, "e2 x:"+e2.getX()+",y:"+e2.getY());
 
 			float xInterval = e1.getX() - e2.getX();
 			float yInterval = e1.getY() - e2.getY();
@@ -112,26 +107,26 @@ public class MainActivity extends Activity implements PrintInterface{
 			direction = -1;
 			if( xIntervalAbs > Util.SWIPE_MIN_DISTANCE && xIntervalAbs > yIntervalAbs*2){
 				if( xInterval > 0 ){
-					Log.i(TAG, "left");
+					//Log.i(TAG, "left");
 					direction = 3;
 				}
 				else{
-					Log.i(TAG, "right");
+					//Log.i(TAG, "right");
 					direction = 1;
 				}
 			}
 
 			if( yIntervalAbs > Util.SWIPE_MIN_DISTANCE && yIntervalAbs > xIntervalAbs*2){
 				if( yInterval > 0 ){
-					Log.i(TAG, "up");
+					//Log.i(TAG, "up");
 					direction = 0;
 				}
 				else{
-					Log.i(TAG, "down");
+					//Log.i(TAG, "down");
 					direction = 2;
 				}
 			}
-			Log.i(TAG, tableLayout.isAnimation() ? "is Animation " : "not Animation");
+			//Log.i(TAG, tableLayout.isAnimation() ? "is Animation " : "not Animation");
 
 			if( direction >= 0 && !tableLayout.isAnimation()){
 				game.Move(direction);
@@ -141,7 +136,7 @@ public class MainActivity extends Activity implements PrintInterface{
 
 		@Override
 		public boolean onDown(MotionEvent e) {
-			Log.v(TAG, "onDown");
+			//Log.v(TAG, "onDown");
 			return true;
 		}
 	}
@@ -193,14 +188,14 @@ public class MainActivity extends Activity implements PrintInterface{
 
 	@Override
 	public void moveView(final Tile from, final Tile to) {
-		Log.e(TAG, "Activity moveView");
-		Log.e(TAG, "from["+from.heigth+","+from.width+"]:"+from.value+" > to["+to.heigth+","+to.width+"]:"+to.value+"\n");
+		//Log.e(TAG, "Activity moveView");
+		//Log.e(TAG, "from["+from.heigth+","+from.width+"]:"+from.value+" > to["+to.heigth+","+to.width+"]:"+to.value+"\n");
 	}
 
 	@Override
 	public void moveViewsSetp(Object[] from, Object[] to, int direction) {
 		// TODO Auto-generated method stub
-		Log.e(TAG, "Activity moveViewsSetp");
+		//Log.e(TAG, "Activity moveViewsSetp");
 		tableLayout.moveViewsStepAnimation(from, to, game.getParameter(direction));
 	}
 
@@ -209,25 +204,24 @@ public class MainActivity extends Activity implements PrintInterface{
 		// TODO Auto-generated method stub
 		int cling2 = 0;
 
-		StringBuffer sb = new StringBuffer("\n");
+		//StringBuffer sb = new StringBuffer("\n");
 		if( null != game){
 			Tile[][] cells = game.grid.cells;
 			for (int h = 0; h < 4; h++) {
-				for (int w = 0; w < 4; w++) {
+				/*for (int w = 0; w < 4; w++) {
 					sb.append(String.format(" %2d ", cells[h][w].previousValue));
 				}
-				sb.append("  >>>>  ");
+				sb.append("  >>>>  ");*/
 				for (int w = 0; w < 4; w++) {
-					sb.append(String.format(" %2d ", cells[h][w].value));
-
+					//sb.append(String.format(" %2d ", cells[h][w].value));
 					if(openCling){
 						if(clingStep == 1 && cells[h][w].value == 4){
 							cling2 = 4;
 						}
 					}
 				}
-				sb.append("\n");
-				Log.e(TAG, "sb.toString(): "+sb.toString());
+				//sb.append("\n");
+				//Log.e(TAG, "sb.toString(): "+sb.toString());
 			}
 		}
 
@@ -273,7 +267,7 @@ public class MainActivity extends Activity implements PrintInterface{
 			setTitle("action_settings");
 			break;*/
 		case R.id.action_restart:
-			setTitle("action_restart");
+			//setTitle("action_restart");
 			game.restart();
 			tableLayout.invalidate();
 			break;

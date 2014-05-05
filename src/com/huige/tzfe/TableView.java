@@ -7,7 +7,6 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.os.Handler;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.widget.TextView;
 
 public class TableView extends TextView {
@@ -48,10 +47,10 @@ public class TableView extends TextView {
 	private Runnable runnable= new Runnable() {
 		public void run() {  
 			handler.postDelayed(this, 5);
-			Log.i("zhengwenhui", "count start: "+count);
+			//Log.i("zhengwenhui", "count start: "+count);
 			TableView.this.postInvalidate();
 			count++;
-			Log.i("zhengwenhui", "count: "+count);
+			//Log.i("zhengwenhui", "count: "+count);
 			if(count>96){
 				handler.removeCallbacks(runnable);
 				animation = false;
@@ -108,7 +107,7 @@ public class TableView extends TextView {
 
 	@Override
 	protected void onDraw(Canvas canvas) {
-		Log.i("zhengwenhui", "onDraw:"+count);
+		//Log.i("zhengwenhui", "onDraw:"+count);
 		if( !mInitPosition ){
 			initPositionlist();
 			mInitPosition = true;
@@ -146,12 +145,12 @@ public class TableView extends TextView {
 	}
 
 	public void moveViewsStepAnimation(Object[] from, Object[] to, int[] directionParameter){
-		Log.e(TAG, "[moveViewsStepAnimation]");
+		//Log.e(TAG, "[moveViewsStepAnimation]");
 		count = 0;
 		animation = true;
 
 		int length = from.length;
-		Log.e(TAG, "length:"+length);
+		//Log.e(TAG, "length:"+length);
 
 		fromTiles = new Tile[length];
 		toTiles = new Tile[length];
@@ -173,7 +172,7 @@ public class TableView extends TextView {
 				whichstep = 0;
 			}
 			stepSign[i] = whichstep;
-			Log.i(TAG, "["+ i +"] :"+stepSign[i]);
+			//Log.i(TAG, "["+ i +"] :"+stepSign[i]);
 			last = toTiles[i];
 		}
 
@@ -187,7 +186,7 @@ public class TableView extends TextView {
 
 		boolean hasStep = false;
 		
-		Log.i(TAG, "[setInit] timer: "+timer);
+		//Log.i(TAG, "[setInit] timer: "+timer);
 
 		for (Interval[] intervalArray : intervalGrid) {
 			for (Interval intervalElement : intervalArray) {
