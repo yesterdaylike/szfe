@@ -1,5 +1,9 @@
 package com.huige.tzfe;
 
+import net.youmi.android.AdManager;
+import net.youmi.android.banner.AdSize;
+import net.youmi.android.banner.AdView;
+import net.youmi.android.spot.SpotManager;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
@@ -16,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class MainActivity extends Activity implements PrintInterface{
@@ -44,6 +49,8 @@ public class MainActivity extends Activity implements PrintInterface{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		AdManager.getInstance(this).init("03412307dfefb843", "80cf970036505cd6", false);
+
 		setContentView(R.layout.activity_main);
 
 		tableLayout = (TableView)findViewById(R.id.table);
@@ -71,6 +78,10 @@ public class MainActivity extends Activity implements PrintInterface{
 			game.setPrintInterface(MainActivity.this);
 		}
 		tableLayout.setDraw(game.grid.cells);
+
+		AdView adView = new AdView(this, AdSize.FIT_SCREEN);
+		LinearLayout adLayout=(LinearLayout)findViewById(R.id.adLayout);
+		adLayout.addView(adView);
 	}
 
 	private void cling(){
@@ -310,6 +321,8 @@ public class MainActivity extends Activity implements PrintInterface{
 
 		strBuilder.append(getString(R.string.step));
 		strBuilder.append(game.step);
+
+		SpotManager.getInstance(this).showSpotAds(this);
 
 		snowFallView.setVisibility(View.VISIBLE);
 

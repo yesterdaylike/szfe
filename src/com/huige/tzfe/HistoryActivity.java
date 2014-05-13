@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.youmi.android.spot.SpotManager;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.database.Cursor;
@@ -24,14 +25,16 @@ public class HistoryActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+
+		SpotManager.getInstance(this).loadSpotAds();
+		SpotManager.getInstance(this).showSpotAds(this);
 		setTitle(getString(R.string.action_history));
-		
 
 		if( null == historyDB ){
 			historyDB = new HistoryDB(this);
 		}
 		Cursor cursor = historyDB.query();
-		
+
 		if( null != cursor && cursor.getCount() > 0){
 			setContentView(R.layout.activity_history);
 			ListView historyListview = (ListView)findViewById(R.id.history_listview);
@@ -39,7 +42,7 @@ public class HistoryActivity extends Activity {
 			score = getString(R.string.score);
 			step = getString(R.string.step);
 			maxNumber = getString(R.string.max_number);
-			
+
 			SimpleAdapter adapter = new SimpleAdapter(this,getData(cursor),R.layout.history_item,
 					new String[]{"date","day","score"},
 					new int[]{R.id.month, R.id.day,R.id.score});
@@ -75,7 +78,7 @@ public class HistoryActivity extends Activity {
 					.getColumnIndex(HistoryDB.month));
 			day = cursor.getInt(cursor
 					.getColumnIndex(HistoryDB.day));
-			
+
 			if( month == lastMonth ){
 				monthStr = "";
 				if( day == lastDay ){
