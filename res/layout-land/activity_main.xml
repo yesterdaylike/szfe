@@ -40,16 +40,11 @@
 
     <com.huige.tzfe.TableView
         android:id="@+id/table"
-        android:layout_width="400dp"
-        android:layout_height="400dp"
-        android:layout_centerInParent="true" />
-
-    <View
-        android:id="@+id/cling"
-        android:layout_width="450dp"
-        android:layout_height="450dp"
+        android:layout_width="@dimen/tablesize"
+        android:layout_height="@dimen/tablesize"
         android:layout_centerInParent="true"
-        android:visibility="invisible" />
+        android:background="@drawable/table_background"
+        android:padding="10dp" />
 
     <com.huige.tzfe.SnowFallView
         android:id="@+id/snow"
@@ -66,5 +61,12 @@
         android:orientation="horizontal"
         android:visibility="invisible" >
     </LinearLayout>
+
+    <View
+        android:id="@+id/cling"
+        android:layout_width="@dimen/clingsize"
+        android:layout_height="@dimen/clingsize"
+        android:layout_centerInParent="true"
+        android:visibility="invisible" />
 
 </RelativeLayout>

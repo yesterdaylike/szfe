@@ -263,7 +263,7 @@ public class MainActivity extends Activity implements PrintInterface{
 				clingStep = 0;
 				openCling = false;
 			}
-			tableLayout.invalidate();
+			//tableLayout.invalidate();
 		}
 
 		tableLayout.addRandomTile(newTile);

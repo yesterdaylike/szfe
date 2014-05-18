@@ -254,13 +254,14 @@ public class GameManager {
 						other.mergedFrom = new Point(tile.heigth, tile.width);
 						if( maxNumber < other.value ){
 							maxNumber = other.value;
+							if (maxNumber == 1024){
+								won = true; //游戏成功
+								mPrintInterface.gameResult(PrintInterface.GAME_SUCCESS);
+							}
 						}
 						score += other.value;
 						mPrintInterface.printScore(score);
-						if (maxNumber == 1024){
-							won = true; //游戏成功
-							mPrintInterface.gameResult(PrintInterface.GAME_SUCCESS);
-						}
+						
 						break;
 					}
 					else{

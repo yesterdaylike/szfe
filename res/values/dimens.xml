@@ -9,5 +9,7 @@
     <dimen name="button_width">150dp</dimen>
     <dimen name="button_height">60dp</dimen>
     <dimen name="textsize">20sp</dimen>
+    <dimen name="tablesize">420dp</dimen>
+    <dimen name="clingsize">450dp</dimen>
 
 </resources>
