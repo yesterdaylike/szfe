@@ -17,7 +17,7 @@ public class TableView extends TextView {
 	private Paint paint;			//���黭��
 	private RectF cellRect;			//С�����ľ��η�Χ
 
-	private int value;				//int��
+	private int value;				//In��
 
 	private Tile[] fromTiles;				
 	private Tile[] toTiles;	

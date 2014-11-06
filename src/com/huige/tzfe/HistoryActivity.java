@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.youmi.android.spot.SpotManager;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.database.Cursor;
@@ -26,8 +25,6 @@ public class HistoryActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 
-		SpotManager.getInstance(this).loadSpotAds();
-		SpotManager.getInstance(this).showSpotAds(this);
 		setTitle(getString(R.string.action_history));
 
 		if( null == historyDB ){
