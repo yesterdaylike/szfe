@@ -11,5 +11,8 @@
     <dimen name="textsize">20sp</dimen>
     <dimen name="tablesize">420dp</dimen>
     <dimen name="clingsize">450dp</dimen>
+    <dimen name="welcome_margin">20dp</dimen>
+    <dimen name="welcome_margin_large">40dp</dimen>
+    <dimen name="welcome_button_width">450dp</dimen>
 
 </resources>

@@ -285,6 +285,10 @@ public class MainActivity extends Activity implements PrintInterface{
 		return true;
 	}
 
+	public void onClickButton(View view){
+		this.onBackPressed();
+	}
+
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub

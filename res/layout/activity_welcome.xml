@@ -1,0 +1,51 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:gravity="center_vertical" >
+
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="fitCenter"
+        android:src="@drawable/logo" />
+
+    <Button
+        android:id="@+id/start"
+        android:layout_width="@dimen/welcome_button_width"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/logo"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/welcome_margin"
+        android:background="@drawable/start_button"
+        android:onClick="onClickStartButton"
+        android:text="@string/start_play"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <Button
+        android:id="@+id/history"
+        android:layout_width="@dimen/welcome_button_width"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/start"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/welcome_margin"
+        android:background="@drawable/history_button"
+        android:onClick="onClickHistoryButton"
+        android:text="@string/best_score"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <Button
+        android:id="@+id/share"
+        android:layout_width="@dimen/welcome_button_width"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/history"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/welcome_margin_large"
+        android:background="@drawable/share_button"
+        android:onClick="onClickHistoryButton"
+        android:text="@string/share_with"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+</RelativeLayout>

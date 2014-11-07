@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">2指数</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_restart">重新开始</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="step">步数：</string>
+    <string name="score">得分：</string>
+    <string name="max_number">最大数字：</string>
+    <string name="action_history">记录</string>
+    <string name="no_history">还没有历史记录</string>
+    <string name="today">今天</string>
+    <string name="cling">滑动可以移动圆块</string>
+    <string name="cling_2">两个圆块的数字相同时，合并为一个</string>
+    <string name="cling_3">圆块的数字为1024时，游戏成功</string>
+
+</resources>
